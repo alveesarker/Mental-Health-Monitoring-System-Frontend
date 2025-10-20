@@ -1,23 +1,18 @@
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import React from "react";
+import { Header } from "./components/dashboard/header";
+import WhiteBoxWrapper from "./components/ui/Box";
+import Text from "./components/ui/Text";
 
-function App() {
+const App: React.FC = () => {
   return (
     <>
-      <div className="absolute left-[50%] top-[50%] h-[1000px]">
-        <RadioGroup defaultValue="option-one">
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-one" id="option-one" />
-            <Label htmlFor="option-one">Option One</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-two" id="option-two" />
-            <Label htmlFor="option-two">Option Two</Label>
-          </div>
-        </RadioGroup>
-      </div>
+      <Header />
+      {/* Example 1: Wrapping a custom component */}
+      <WhiteBoxWrapper className="w-[300px] h-[600px] bg-[#f1f1f1] ml-10 rounded-3xl">
+        <Text text="Task"/>
+      </WhiteBoxWrapper>
     </>
   );
-}
+};
 
 export default App;
