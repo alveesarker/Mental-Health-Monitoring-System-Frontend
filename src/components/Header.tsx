@@ -33,7 +33,7 @@ export const Header = () => {
 
           <div className="flex items-center gap-4">
             <div className="hidden sm:block text-sm text-muted-foreground">
-              Welcome back, <span className="font-medium text-foreground">Sarah</span>
+              Welcome back, <span className="font-medium text-foreground">Alvee</span>
             </div>
             <Button size="sm" className="gap-2">
               Quick Log

@@ -53,7 +53,7 @@ const DailyLog = () => {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-background mt-5 ml-5 p-6 h-[705.6px] sm:p-8 w-[450px]">
+    <Card className="bg-gradient-to-br from-background p-6 h-[712.6px] sm:p-8 w-[450px]">
       <div className="space-y-8">
         {/* Mood Selection */}
         <div className="space-y-4">
