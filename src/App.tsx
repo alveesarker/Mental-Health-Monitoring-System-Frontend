@@ -1,18 +1,31 @@
-import React from "react";
-import { Header } from "./components/dashboard/header";
-import WhiteBoxWrapper from "./components/ui/Box";
-import Text from "./components/ui/Text";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Header } from "./components/Header";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import Hello from "./pages/Hello";
 
-const App: React.FC = () => {
-  return (
-    <>
-      <Header />
-      {/* Example 1: Wrapping a custom component */}
-      <WhiteBoxWrapper className="w-[300px] h-[600px] bg-[#f1f1f1] ml-10 rounded-3xl">
-        <Text text="Task"/>
-      </WhiteBoxWrapper>
-    </>
-  );
-};
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <Header/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/hello" element={<Hello/>} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
