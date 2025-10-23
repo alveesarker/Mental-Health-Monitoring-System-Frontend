@@ -7,7 +7,7 @@ import { SessionCard } from "@/components/SessionCard";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      
 
       <main className="container mx-auto px-6 py-8">
         <div className="flex items-start justify-evenly gap-2">

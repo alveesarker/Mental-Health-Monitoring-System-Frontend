@@ -15,7 +15,9 @@ export const SessionCard = () => {
         <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/40 border border-border/40">
           <Avatar className="h-12 w-12 shadow-inner">
             <AvatarImage src="" alt="Dr. Anya Sharma" />
-            <AvatarFallback className="bg-primary text-white">AS</AvatarFallback>
+            <AvatarFallback className="bg-primary text-white">
+              AS
+            </AvatarFallback>
           </Avatar>
           <div>
             <p className="text-sm text-muted-foreground mb-0.5">
@@ -61,9 +63,11 @@ export const SessionCard = () => {
         </Card>
       </div>
 
-      <Button variant="outline" className="w-full mt-4">
-        Book Another Session
-      </Button>
+      <a href="/session/book">
+        <Button variant="outline" className="w-full mt-4">
+          Book Another Session
+        </Button>
+      </a>
     </Card>
   );
 };
