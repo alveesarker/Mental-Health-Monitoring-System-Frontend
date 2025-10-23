@@ -1,5 +1,5 @@
-import { Calendar, Star, Clock, TrendingUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Calendar, Clock, Star, TrendingUp } from "lucide-react";
 
 const metrics = [
   {

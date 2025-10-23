@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
 import { Star } from "lucide-react";
 
 export const CounsellorProfileCard = () => {
@@ -8,18 +8,29 @@ export const CounsellorProfileCard = () => {
       <div className="flex flex-col items-center text-center">
         <Avatar className="h-20 w-20 shadow-inner mb-3">
           <AvatarImage src="" alt="Dr. Alvee Sarker" />
-          <AvatarFallback className="bg-primary text-white text-lg font-semibold">AS</AvatarFallback>
+          <AvatarFallback className="bg-primary text-white text-lg font-semibold">
+            AS
+          </AvatarFallback>
         </Avatar>
 
-        <h3 className="text-lg font-semibold text-foreground">Dr. Alvee Sarker</h3>
-        <p className="text-sm text-muted-foreground mb-2">Clinical Psychologist</p>
+        <h3 className="text-lg font-semibold text-foreground">
+          Dr. Alvee Sarker
+        </h3>
+        <p className="text-sm text-muted-foreground mb-2">
+          Clinical Psychologist
+        </p>
 
         <div className="flex items-center justify-center gap-1 text-yellow-500">
-          {Array(5).fill(0).map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
+          {Array(5)
+            .fill(0)
+            .map((_, i) => (
+              <Star key={i} size={16} fill="currentColor" />
+            ))}
         </div>
 
         <p className="text-sm mt-3 text-muted-foreground leading-snug px-3">
-          Specialized in stress management and emotional regulation. Helping clients improve mental resilience.
+          Specialized in stress management and emotional regulation. Helping
+          clients improve mental resilience.
         </p>
       </div>
 

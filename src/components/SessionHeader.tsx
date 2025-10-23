@@ -1,6 +1,5 @@
-import { Search, Bell, LogOut, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Bell, LogOut, Search, User } from "lucide-react";
 
 export const SessionHeader = () => {
   return (
@@ -18,7 +18,9 @@ export const SessionHeader = () => {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <span className="text-lg font-bold text-primary-foreground">S</span>
+              <span className="text-lg font-bold text-primary-foreground">
+                S
+              </span>
             </div>
             <h1 className="text-xl font-semibold bg-gradient-primary bg-clip-text text-transparent">
               Session Management
@@ -45,14 +47,22 @@ export const SessionHeader = () => {
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <Avatar className="h-9 w-9 border-2 border-primary/20">
                   <AvatarImage src="/placeholder.svg" alt="Dr. Sarah Chen" />
-                  <AvatarFallback className="bg-gradient-primary text-primary-foreground">SC</AvatarFallback>
+                  <AvatarFallback className="bg-gradient-primary text-primary-foreground">
+                    SC
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 bg-card" align="end" forceMount>
+            <DropdownMenuContent
+              className="w-56 bg-card"
+              align="end"
+              forceMount
+            >
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">Dr. Sarah Chen</p>
+                  <p className="text-sm font-medium leading-none">
+                    Dr. Sarah Chen
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     sarah.chen@mindcare.com
                   </p>
