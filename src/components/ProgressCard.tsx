@@ -10,14 +10,14 @@ import {
 } from "recharts";
 
 const data = [
-  { day: "25/7", mood: 10, stress: 4 },
-  { day: "26/7", mood: 1, stress: 3 },
-  { day: "27/7", mood: 7, stress: 4 },
-  { day: "27/7", mood: 3, stress: 2 },
-  { day: "29/7", mood: 7, stress: 5 },
-  { day: "30/7", mood: 1, stress: 3 },
-  { day: "1/8", mood: 5, stress: 7 },
-  { day: "2/8", mood: 1, stress: 3 },
+  { day: "25/7", mood: 2, stress: 3 },
+  { day: "26/7", mood: 2, stress: 9 },
+  { day: "27/7", mood: 3, stress: 5 },
+  { day: "27/7", mood: 4, stress: 3 },
+  { day: "29/7", mood: 7, stress: 2 },
+  { day: "30/7", mood: 4, stress: 1 },
+  { day: "1/8", mood: 6, stress: 3 },
+  { day: "2/8", mood: 9, stress: 6 },
 ];
 
 export const ProgressCard = () => {

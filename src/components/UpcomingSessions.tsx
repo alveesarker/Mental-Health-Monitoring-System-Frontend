@@ -1,6 +1,8 @@
-import { Calendar as CalendarIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar as CalendarIcon, MessageSquare } from "lucide-react";
+import { Link } from "react-router-dom";
 import { SessionCard } from "./DSessionCard";
+import { Button } from "./ui/button";
 
 const upcomingSessions = [
   {
@@ -61,15 +63,22 @@ export const UpcomingSessions = () => {
       <CardContent className="pt-4">
         <div className="grid gap-4 md:grid-cols-2">
           {upcomingSessions.map((session, index) => (
-            <div
-              key={index}
-              className=" rounded-md shadow-sm  hover:shadow-xl"
-            >
+            <div key={index} className=" rounded-md shadow-sm  hover:shadow-xl">
               <SessionCard {...session} />
             </div>
           ))}
         </div>
       </CardContent>
+      <Link to={"/session/book"}>
+        <Button
+          size="sm"
+          variant="default"
+          className="w-[96.5%] h-10 relative gap-1.5 mb-5 left-[50%] translate-x-[-50%]"
+        >
+          <MessageSquare className="h-4 w-4" />
+          Book Another Session
+        </Button>
+      </Link>
     </Card>
   );
 };

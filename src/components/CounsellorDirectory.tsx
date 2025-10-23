@@ -67,9 +67,8 @@ const counsellors = [
 ];
 
 export const CounsellorDirectory = () => {
-  const [assignedCounsellor, setAssignedCounsellor] = useState<number | null>(
-    null
-  );
+  const [assignedCounsellor, setAssignedCounsellor] =
+    useState<Counsellor | null>(null);
   const [selectedCounsellor, setSelectedCounsellor] =
     useState<Counsellor | null>(null);
   const [showDialog, setShowDialog] = useState(false);
@@ -80,9 +79,11 @@ export const CounsellorDirectory = () => {
     notes: "",
   });
 
-  const handleAssign = (id: number, name: string) => {
-    setAssignedCounsellor(id);
-    toast.success(`Counsellor ${name} has been assigned successfully.`);
+  const handleAssign = (counsellor: Counsellor) => {
+    setAssignedCounsellor(counsellor);
+    toast.success(
+      `Counsellor ${counsellor.name} has been assigned successfully.`
+    );
   };
 
   const handleRequestSession = (counsellor: Counsellor) => {
@@ -96,8 +97,6 @@ export const CounsellorDirectory = () => {
       return;
     }
     setShowDialog(false);
-    toast.success("Request sent successfully");
-
     toast.success(
       `Session request sent to ${selectedCounsellor.name} for ${formData.date} at ${formData.time} (${formData.mode}).`
     );
@@ -115,13 +114,13 @@ export const CounsellorDirectory = () => {
                 Assigned Counsellor
               </h2>
               <p className="text-muted-foreground text-sm">
-                {counsellors.find((c) => c.id === assignedCounsellor)?.name}
+                {assignedCounsellor.name}
               </p>
             </div>
             <Button
               size="sm"
               variant="default"
-              onClick={() => handleRequestSession(assignedCounsellor[0])}
+              onClick={() => handleRequestSession(assignedCounsellor)}
               className="gap-1.5"
             >
               <MessageSquare className="h-4 w-4" />
@@ -174,7 +173,7 @@ export const CounsellorDirectory = () => {
                 </div>
 
                 <div className="mt-4 flex gap-2">
-                  {assignedCounsellor === c.id ? (
+                  {assignedCounsellor?.id === c.id ? (
                     <Button
                       size="sm"
                       variant="default"
@@ -188,12 +187,16 @@ export const CounsellorDirectory = () => {
                     <Button
                       size="sm"
                       variant="secondary"
-                      disabled={c.availability !== "Available"}
-                      onClick={() => handleAssign(c.id, c.name)}
+                      disabled={
+                        c.availability !== "Available" || assignedCounsellor
+                          ? true
+                          : false
+                      }
+                      onClick={() => handleAssign(c)}
                       className="gap-1.5"
                     >
                       <UserCheck className="h-4 w-4" />
-                      Assign
+                      Request
                     </Button>
                   )}
                 </div>
