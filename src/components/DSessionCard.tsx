@@ -37,7 +37,7 @@ export const SessionCard = ({ patient, date, time, mode, status }: SessionCardPr
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-12 w-12 border-2 border-primary/20 ring-2 ring-transparent group-hover:ring-primary/10 transition-all">
-              <AvatarImage src={patient.photo} alt={patient.name} />
+              <AvatarImage className="object-cover" src={patient.photo} alt={patient.name} />
               <AvatarFallback className="bg-gradient-primary text-primary-foreground font-semibold">
                 {patient.initials}
               </AvatarFallback>

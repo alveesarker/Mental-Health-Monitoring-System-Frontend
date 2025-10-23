@@ -83,6 +83,48 @@ const notifications: Notification[] = [
     type: "info",
     time: "1d ago",
   },
+  {
+    id: 1,
+    title: "New Session Granted",
+    message: "Your session is approved",
+    type: "success",
+    time: "2m ago",
+  },
+  {
+    id: 2,
+    title: "Session Pending",
+    message: "Waiting for counsellor confirmation",
+    type: "info",
+    time: "10m ago",
+  },
+  {
+    id: 3,
+    title: "Session Completed",
+    message: "You have completed your session",
+    type: "success",
+    time: "1h ago",
+  },
+  {
+    id: 4,
+    title: "Session Cancelled",
+    message: "Your session was cancelled by counsellor",
+    type: "error",
+    time: "3h ago",
+  },
+  {
+    id: 5,
+    title: "Reminder",
+    message: "Your session starts in 30 minutes",
+    type: "info",
+    time: "5h ago",
+  },
+  {
+    id: 6,
+    title: "New Message",
+    message: "Counsellor sent a new message",
+    type: "info",
+    time: "1d ago",
+  },
 ];
 
 // Map type to color and icon

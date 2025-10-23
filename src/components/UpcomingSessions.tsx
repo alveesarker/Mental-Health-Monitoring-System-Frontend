@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar as CalendarIcon, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+import c1 from "../assets/images/c1.avif";
+import c2 from "../assets/images/c2.jpg";
+import c3 from "../assets/images/c4.webp";
+import c4 from "../assets/images/c5.avif";
 import { SessionCard } from "./DSessionCard";
 import { Button } from "./ui/button";
 
@@ -8,7 +12,7 @@ const upcomingSessions = [
   {
     patient: {
       name: "Alex Thompson",
-      photo: "/placeholder.svg",
+      photo: c1,
       initials: "AT",
     },
     date: "Oct 23, 2025",
@@ -19,7 +23,7 @@ const upcomingSessions = [
   {
     patient: {
       name: "Rachel Green",
-      photo: "/placeholder.svg",
+      photo: c2,
       initials: "RG",
     },
     date: "Oct 23, 2025",
@@ -30,7 +34,7 @@ const upcomingSessions = [
   {
     patient: {
       name: "David Martinez",
-      photo: "/placeholder.svg",
+      photo: c3,
       initials: "DM",
     },
     date: "Oct 23, 2025",
@@ -41,7 +45,7 @@ const upcomingSessions = [
   {
     patient: {
       name: "Lisa Anderson",
-      photo: "/placeholder.svg",
+      photo: c4,
       initials: "LA",
     },
     date: "Oct 24, 2025",
