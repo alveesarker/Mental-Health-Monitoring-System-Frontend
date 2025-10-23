@@ -96,7 +96,7 @@ export const CounsellorDirectory = () => {
       return;
     }
     setShowDialog(false);
-    toast.error("Request sent successfully");
+    toast.success("Request sent successfully");
 
     toast.success(
       `Session request sent to ${selectedCounsellor.name} for ${formData.date} at ${formData.time} (${formData.mode}).`

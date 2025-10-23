@@ -3,11 +3,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import CounsellorDirectory from "./components/CounsellorDirectory";
 import { Header } from "./components/Header";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SessionPage from "./pages/SessionPage";
-import CounsellorDirectory from "./components/CounsellorDirectory";
 
 const queryClient = new QueryClient();
 
@@ -16,8 +16,8 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <Header />
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/session" element={<SessionPage />} />

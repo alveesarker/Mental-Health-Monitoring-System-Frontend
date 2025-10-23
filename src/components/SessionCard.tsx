@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Calendar, Clock, Video } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const SessionCard = () => {
   return (
@@ -63,11 +64,11 @@ export const SessionCard = () => {
         </Card>
       </div>
 
-      <a href="/session/book">
+      <Link to="/session/book">
         <Button variant="outline" className="w-full mt-4">
           Book Another Session
         </Button>
-      </a>
+      </Link>
     </Card>
   );
 };

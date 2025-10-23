@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,13 +32,13 @@ export const Header = () => {
             </div>
 
             <nav className="hidden md:flex items-center gap-6">
-              <a
-                href="/"
+              <Link
+                to="/"
                 className="flex items-center gap-2 text-sm font-medium text-foreground transition-colors hover:text-primary"
               >
                 <BookOpen className="h-4 w-4" />
                 Dashboard
-              </a>
+              </Link>
               <a
                 href="/hello"
                 className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
@@ -45,13 +46,13 @@ export const Header = () => {
                 <Sparkles className="h-4 w-4" />
                 Recommendations
               </a>
-              <a
-                href="/session"
+              <Link
+                to="/session"
                 className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
                 <Calendar className="h-4 w-4" />
                 Sessions
-              </a>
+              </Link>
               <a
                 href="#"
                 className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
