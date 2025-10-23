@@ -44,6 +44,22 @@ const sessionHistory = [
     rating: 4,
     hasNotes: true,
   },
+  {
+    id: "S-1232",
+    patient: "Sarah Davis",
+    date: "Oct 18, 2025",
+    duration: "60 min",
+    rating: 5,
+    hasNotes: false,
+  },
+  {
+    id: "S-1231",
+    patient: "James Wilson",
+    date: "Oct 17, 2025",
+    duration: "50 min",
+    rating: 4,
+    hasNotes: true,
+  },
 ];
 
 export const SessionHistory = () => {
@@ -67,7 +83,7 @@ export const SessionHistory = () => {
                   Session ID
                 </TableHead>
                 <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
-                  Patient Name
+                  Counsellor Name
                 </TableHead>
                 <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
                   Date
