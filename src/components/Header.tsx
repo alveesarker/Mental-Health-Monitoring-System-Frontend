@@ -178,6 +178,14 @@ export const Header = () => {
               </Link>
 
               <Link
+                to="/moodanalysis"
+                className={`${baseLink} ${isActive("/moodanalysis") ? active : muted}`}
+              >
+                <Sparkles className="h-4 w-4" />
+                Mood Analysis
+              </Link>
+
+              <Link
                 to="/session"
                 className={`${baseLink} ${
                   isActive("/session") ? active : muted

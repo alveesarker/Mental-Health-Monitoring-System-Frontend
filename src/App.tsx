@@ -8,6 +8,7 @@ import { Header } from "./components/Header";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SessionPage from "./pages/SessionPage";
+import AiMood from "./pages/AiMood";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/session" element={<SessionPage />} />
           <Route path="/session/book" element={<CounsellorDirectory />} />
+          <Route path="/moodanalysis" element={<AiMood />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
