@@ -2,127 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Mindful Color System – designed for a mental health app
+   Theme goals: calm, safe, compassionate, and balanced.
+   All colors are in HSL format.
 */
-
 
 @layer base {
   :root {
     /* Base Colors (Backgrounds and Text) */
-    --background: 40 10% 98%;
-    /* Very light creamy off-white */
-    --foreground: 40 10% 25%;
-    /* Soft brown-gray for text */
+    --background: 160 20% 97%;
+    /* very light minty off-white */
+    --foreground: 160 10% 20%;
+    /* calm dark teal-gray for text */
 
     --card: 0 0% 100%;
-    --card-foreground: 40 10% 25%;
+    --card-foreground: 160 10% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 40 10% 25%;
+    --popover-foreground: 160 10% 20%;
 
-    /* Brand & Interaction Colors (Coral Primary, Gray Secondary) */
-    --primary: 15 55% 55%;
-    /* Soft Coral/Terracotta */
+    /* Brand & Interaction Colors */
+    --primary: 165 45% 45%;
+    /* calm teal/green – symbol of healing */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 10% 35%;
-    /* Deep Cool Gray */
+    --secondary: 250 35% 65%;
+    /* soft lavender – empathy & trust */
     --secondary-foreground: 0 0% 100%;
 
     /* Utility Colors */
-    --muted: 40 15% 92%;
-    /* Light beige/tan */
-    --muted-foreground: 40 10% 55%;
+    --muted: 160 20% 90%;
+    /* pale mint-gray */
+    --muted-foreground: 160 10% 45%;
 
-    --accent: 30 60% 75%;
-    /* Soft Peach/Apricot for subtle emphasis */
-    --accent-foreground: 40 10% 25%;
+    --accent: 20 70% 75%;
+    /* warm peach accent */
+    --accent-foreground: 160 10% 20%;
 
-    --destructive: 0 70% 60%;
-    /* Retained for clear error states (Red) */
+    --destructive: 0 70% 65%;
+    /* soft rose red */
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders & Input Colors */
-    --border: 40 20% 88%;
-    --input: 40 20% 90%;
-    --ring: 15 55% 55%;
+    /* Borders & Inputs */
+    --border: 160 20% 85%;
+    --input: 160 20% 92%;
+    --ring: 165 45% 45%;
 
     --radius: 1rem;
 
     /* Gradients & Effects */
-    --gradient-primary: linear-gradient(135deg, hsl(15 55% 55%), hsl(30 60% 75%));
-    /* Coral to Peach */
-    --gradient-calm: linear-gradient(180deg, hsl(40 10% 98%), hsl(30 15% 95%));
-    --shadow-soft: 0 4px 20px -2px hsl(15 55% 55% / 0.15);
-    /* Shadow based on new primary color */
-    --shadow-card: 0 8px 32px -8px hsla(0, 0%, 100%, 0.12);
+    --gradient-primary: linear-gradient(135deg, hsl(165 45% 45%), hsl(250 35% 65%));
+    --gradient-calm: linear-gradient(180deg, hsl(160 20% 97%), hsl(160 20% 92%));
+    --shadow-soft: 0 4px 20px -2px hsl(165 45% 45% / 0.15);
+    --shadow-card: 0 8px 32px -8px hsl(160 10% 40% / 0.12);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Sidebar Colors */
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 40 10% 25%;
-    --sidebar-primary: 15 55% 55%;
+    --sidebar-background: 160 20% 98%;
+    --sidebar-foreground: 160 10% 20%;
+    --sidebar-primary: 165 45% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 40 15% 92%;
-    --sidebar-accent-foreground: 40 10% 25%;
-    --sidebar-border: 40 20% 88%;
-    --sidebar-ring: 15 55% 55%;
+    --sidebar-accent: 160 20% 92%;
+    --sidebar-accent-foreground: 160 10% 20%;
+    --sidebar-border: 160 20% 85%;
+    --sidebar-ring: 165 45% 45%;
   }
 
   .dark {
-    /* Base Colors (Backgrounds and Text) */
-    --background: 40 10% 15%;
-    /* Deep earthy brown-gray */
-    --foreground: 40 20% 85%;
-    /* Light creamy text */
+    /* Base Colors */
+    --background: 160 10% 10%;
+    /* deep calming teal-gray */
+    --foreground: 160 15% 85%;
+    /* light text for dark bg */
 
-    --card: 40 10% 20%;
-    --card-foreground: 40 20% 85%;
+    --card: 160 10% 15%;
+    --card-foreground: 160 15% 85%;
 
-    --popover: 40 10% 20%;
-    --popover-foreground: 40 20% 85%;
+    --popover: 160 10% 15%;
+    --popover-foreground: 160 15% 85%;
 
-    /* Brand & Interaction Colors (Coral Primary, Gray Secondary) */
-    --primary: 15 55% 65%;
-    /* Brighter Coral for contrast */
+    /* Brand & Interaction Colors */
+    --primary: 165 45% 60%;
+    /* brighter teal for contrast */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 10% 65%;
-    /* Medium Cool Gray for contrast */
-    --secondary-foreground: 40 10% 15%;
-    /* Dark text on light secondary for dark mode */
+    --secondary: 250 35% 70%;
+    /* soothing lavender for dark bg */
+    --secondary-foreground: 160 10% 15%;
 
     /* Utility Colors */
-    --muted: 40 10% 30%;
-    --muted-foreground: 40 15% 60%;
+    --muted: 160 10% 25%;
+    --muted-foreground: 160 15% 65%;
 
-    --accent: 30 60% 55%;
-    --accent-foreground: 40 10% 15%;
+    --accent: 20 70% 65%;
+    --accent-foreground: 160 10% 15%;
 
-    --destructive: 0 65% 55%;
+    --destructive: 0 60% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders & Input Colors */
-    --border: 40 10% 35%;
-    --input: 40 10% 30%;
-    --ring: 15 55% 65%;
+    /* Borders & Inputs */
+    --border: 160 10% 30%;
+    --input: 160 10% 25%;
+    --ring: 165 45% 60%;
 
     /* Gradients & Effects */
-    --gradient-primary: linear-gradient(135deg, hsl(15 55% 65%), hsl(30 60% 65%));
-    --gradient-calm: linear-gradient(180deg, hsl(40 10% 15%), hsl(40 10% 20%));
-    --shadow-soft: 0 4px 20px -2px hsl(15 55% 65% / 0.25);
-    --shadow-card: 0 8px 32px -8px hsla(0, 0%, 27%, 0.3);
+    --gradient-primary: linear-gradient(135deg, hsl(165 45% 60%), hsl(250 35% 70%));
+    --gradient-calm: linear-gradient(180deg, hsl(160 10% 10%), hsl(160 10% 15%));
+    --shadow-soft: 0 4px 20px -2px hsl(165 45% 60% / 0.25);
+    --shadow-card: 0 8px 32px -8px hsl(160 10% 30% / 0.3);
 
     /* Sidebar Colors */
-    --sidebar-background: 40 10% 10%;
-    --sidebar-foreground: 40 20% 85%;
-    --sidebar-primary: 15 55% 65%;
+    --sidebar-background: 160 10% 8%;
+    --sidebar-foreground: 160 15% 85%;
+    --sidebar-primary: 165 45% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 40 10% 30%;
-    --sidebar-accent-foreground: 40 20% 85%;
-    --sidebar-border: 40 10% 35%;
-    --sidebar-ring: 15 55% 65%;
+    --sidebar-accent: 160 10% 25%;
+    --sidebar-accent-foreground: 160 15% 85%;
+    --sidebar-border: 160 10% 30%;
+    --sidebar-ring: 165 45% 60%;
   }
 }
 
