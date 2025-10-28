@@ -3,13 +3,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Header } from "./components/Header";
-import NotFound from "./pages/NotFound";
-import Index from "./pages/Index";
-import SessionPage from "./pages/SessionPage";
 import CounsellorDirectory from "./components/CounsellorDirectory";
+import { Header } from "./components/Header";
 import AiMood from "./pages/AiMood";
-
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import RecommendationPage from "./pages/recommendationPage";
+import SessionPage from "./pages/SessionPage";
 
 // import Alerts from "./pages/Alerts";
 // import Counsellors from "./pages/Counsellors";
@@ -27,6 +27,7 @@ const App = () => (
         <Header />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/recommendation" element={<RecommendationPage />} />
           <Route path="/session" element={<SessionPage />} />
           <Route path="/session/book" element={<CounsellorDirectory />} />
           <Route path="/moodanalysis" element={<AiMood />} />

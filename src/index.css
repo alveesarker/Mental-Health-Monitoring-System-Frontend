@@ -2,124 +2,118 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Mindful Color System – designed for a mental health app
-   Theme goals: calm, safe, compassionate, and balanced.
-   All colors are in HSL format.
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Base Colors (Backgrounds and Text) */
-    --background: 160 20% 97%;
-    /* very light minty off-white */
-    --foreground: 160 10% 20%;
-    /* calm dark teal-gray for text */
+    --background: 220 20% 97%;
+    --foreground: 220 15% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 160 10% 20%;
+    --card-foreground: 220 15% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 160 10% 20%;
+    --popover-foreground: 220 15% 20%;
 
-    /* Brand & Interaction Colors */
-    --primary: 165 45% 45%;
-    /* calm teal/green – symbol of healing */
+    --primary: 200 95% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 250 35% 65%;
-    /* soft lavender – empathy & trust */
+    --secondary: 260 60% 65%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Utility Colors */
-    --muted: 160 20% 90%;
-    /* pale mint-gray */
-    --muted-foreground: 160 10% 45%;
+    --muted: 220 15% 92%;
+    --muted-foreground: 220 10% 50%;
 
-    --accent: 20 70% 75%;
-    /* warm peach accent */
-    --accent-foreground: 160 10% 20%;
+    --accent: 165 75% 55%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 65%;
-    /* soft rose red */
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders & Inputs */
-    --border: 160 20% 85%;
-    --input: 160 20% 92%;
-    --ring: 165 45% 45%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 200 95% 45%;
 
     --radius: 1rem;
 
-    /* Gradients & Effects */
-    --gradient-primary: linear-gradient(135deg, hsl(165 45% 45%), hsl(250 35% 65%));
-    --gradient-calm: linear-gradient(180deg, hsl(160 20% 97%), hsl(160 20% 92%));
-    --shadow-soft: 0 4px 20px -2px hsl(165 45% 45% / 0.15);
-    --shadow-card: 0 8px 32px -8px hsl(160 10% 40% / 0.12);
+    /* Custom wellness colors */
+    --wellness-blue: 210 100% 95%;
+    --wellness-purple: 260 100% 95%;
+    --wellness-mint: 165 80% 92%;
+
+    /* Gradients */
+    --gradient-wellness: linear-gradient(135deg, hsl(200 95% 45% / 0.1), hsl(165 75% 55% / 0.1));
+    --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+
+    /* Shadows */
+    --shadow-card: 0 4px 20px -4px hsl(220 15% 20% / 0.08);
+    --shadow-card-hover: 0 8px 30px -6px hsl(220 15% 20% / 0.15);
+
+    /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Sidebar Colors */
-    --sidebar-background: 160 20% 98%;
-    --sidebar-foreground: 160 10% 20%;
-    --sidebar-primary: 165 45% 45%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 160 20% 92%;
-    --sidebar-accent-foreground: 160 10% 20%;
-    --sidebar-border: 160 20% 85%;
-    --sidebar-ring: 165 45% 45%;
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    /* Base Colors */
-    --background: 160 10% 10%;
-    /* deep calming teal-gray */
-    --foreground: 160 15% 85%;
-    /* light text for dark bg */
+    --background: 220 20% 12%;
+    --foreground: 220 15% 95%;
 
-    --card: 160 10% 15%;
-    --card-foreground: 160 15% 85%;
+    --card: 220 20% 15%;
+    --card-foreground: 220 15% 95%;
 
-    --popover: 160 10% 15%;
-    --popover-foreground: 160 15% 85%;
+    --popover: 220 20% 15%;
+    --popover-foreground: 220 15% 95%;
 
-    /* Brand & Interaction Colors */
-    --primary: 165 45% 60%;
-    /* brighter teal for contrast */
+    --primary: 200 95% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 250 35% 70%;
-    /* soothing lavender for dark bg */
-    --secondary-foreground: 160 10% 15%;
+    --secondary: 260 60% 60%;
+    --secondary-foreground: 0 0% 100%;
 
-    /* Utility Colors */
-    --muted: 160 10% 25%;
-    --muted-foreground: 160 15% 65%;
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 10% 60%;
 
-    --accent: 20 70% 65%;
-    --accent-foreground: 160 10% 15%;
+    --accent: 165 75% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 60% 60%;
+    --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders & Inputs */
-    --border: 160 10% 30%;
-    --input: 160 10% 25%;
-    --ring: 165 45% 60%;
+    --border: 220 20% 25%;
+    --input: 220 20% 25%;
+    --ring: 200 95% 55%;
 
-    /* Gradients & Effects */
-    --gradient-primary: linear-gradient(135deg, hsl(165 45% 60%), hsl(250 35% 70%));
-    --gradient-calm: linear-gradient(180deg, hsl(160 10% 10%), hsl(160 10% 15%));
-    --shadow-soft: 0 4px 20px -2px hsl(165 45% 60% / 0.25);
-    --shadow-card: 0 8px 32px -8px hsl(160 10% 30% / 0.3);
+    --wellness-blue: 210 80% 20%;
+    --wellness-purple: 260 60% 20%;
+    --wellness-mint: 165 60% 20%;
 
-    /* Sidebar Colors */
-    --sidebar-background: 160 10% 8%;
-    --sidebar-foreground: 160 15% 85%;
-    --sidebar-primary: 165 45% 60%;
+    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --shadow-card-hover: 0 8px 30px -6px hsl(0 0% 0% / 0.4);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 160 10% 25%;
-    --sidebar-accent-foreground: 160 15% 85%;
-    --sidebar-border: 160 10% 30%;
-    --sidebar-ring: 165 45% 60%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 

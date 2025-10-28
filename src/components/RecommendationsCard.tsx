@@ -63,7 +63,7 @@ export function RecommendationsCard() {
 
             {/* icon */}
             <div
-              className={`relative z-10 ${rec.color} bg-white/70 p-3 rounded-xl shadow-inner mb-2 transition-transform group-hover:scale-110`}
+              className={`relative z-10 ${rec.color} bg-white/70 p-3 rounded-xl shadow-inner flex items-center justify-center mb-2 transition-transform group-hover:scale-110`}
             >
               <rec.icon className="w-6 h-6" />
             </div>

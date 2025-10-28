@@ -170,8 +170,8 @@ export const Header = () => {
               </Link>
 
               <Link
-                to="/hello"
-                className={`${baseLink} ${isActive("/hello") ? active : muted}`}
+                to="/recommendation"
+                className={`${baseLink} ${isActive("/recommendation") ? active : muted}`}
               >
                 <Sparkles className="h-4 w-4" />
                 Recommendations
@@ -188,7 +188,7 @@ export const Header = () => {
               <Link
                 to="/session"
                 className={`${baseLink} ${
-                  isActive("/session") ? active : muted
+                  isActive("/session") || isActive("/session/book") ? active : muted
                 }`}
               >
                 <Calendar className="h-4 w-4" />
