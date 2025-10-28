@@ -112,7 +112,7 @@ const AiMood = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8">
-      <div className="w-full max-w-3xl space-y-8 animate-fade-in">
+      <div className="w-full max-w-4xl space-y-8 animate-fade-in">
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-3 mb-4">

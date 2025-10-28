@@ -157,9 +157,11 @@ export const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-foreground">
-                PSYTRACK
+              <Link to={'/'}>
+              <span className="text-xl font-bold cursor-pointer text-foreground">
+                PSYTrack
               </span>
+              </Link>
             </div>
 
             <nav className="hidden md:flex items-center gap-6">

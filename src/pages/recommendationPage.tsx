@@ -23,7 +23,7 @@ const RecommendationPage = () => {
             Suggested Activities
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Based on your wellness profile, here are tailored recommendations to
+            Based on your wellness profile, here are some recommendations to
             help you thrive
           </p>
         </div>
