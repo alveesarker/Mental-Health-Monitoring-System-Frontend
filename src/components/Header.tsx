@@ -20,13 +20,14 @@ import {
   BookOpen,
   Calendar,
   CheckCircle,
+  Compass,
   Info,
   LogOut,
   MessageSquare,
   Sparkles,
   User,
   XCircle,
-  Compass
+  AlertTriangle
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import alveeImg from "../assets/images/alvee.jpg";
@@ -156,8 +157,8 @@ export const Header = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-semibold text-foreground">
-                WellBeing Hub
+              <span className="text-xl font-bold text-foreground">
+                PSYTRACK
               </span>
             </div>
 
@@ -187,7 +188,7 @@ export const Header = () => {
                 }`}
               >
                 <Compass className="h-4 w-4" />
-                Recommendations
+                Recommendation
               </Link>
 
               <Link
@@ -199,7 +200,7 @@ export const Header = () => {
                 }`}
               >
                 <Calendar className="h-4 w-4" />
-                Sessions
+                Session
               </Link>
 
               <Link
@@ -210,6 +211,16 @@ export const Header = () => {
               >
                 <MessageSquare className="h-4 w-4" />
                 Counsellro Feedback
+              </Link>
+
+              <Link
+                to="/emergency"
+                className={`${baseLink} ${
+                  isActive("/emergency") ? active : muted
+                }`}
+              >
+                <AlertTriangle className="h-4 w-4" />
+                Emergency Support
               </Link>
             </nav>
           </div>

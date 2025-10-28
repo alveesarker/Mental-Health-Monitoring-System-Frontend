@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, Star, User, UserCheck } from "lucide-react";
+import { Calendar, Star, UserCheck } from "lucide-react";
 import { CounsellorFeedback } from "../../data/feedbackData";
 
 interface FeedbackDialogProps {
@@ -52,20 +52,18 @@ export const FeedbackDialog = ({
         <div className="space-y-6 pt-4">
           {/* Patient and Counsellor Info */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-2 text-sm">
+            {/* <div className="flex items-center gap-2 text-sm">
               <User className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">Patient:</span>
               <span className="font-medium">{feedback.patientName}</span>
-            </div>
+            </div> */}
+
             <div className="flex items-center gap-2 text-sm">
               <UserCheck className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">Counsellor:</span>
               <span className="font-medium">{feedback.counsellorName}</span>
             </div>
-          </div>
 
-          {/* Session Date and Score */}
-          <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center gap-2 text-sm">
               <Calendar className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">Session Date:</span>
@@ -79,6 +77,9 @@ export const FeedbackDialog = ({
               <span className="font-medium">{feedback.feedbackScore}/10</span>
             </div>
           </div>
+
+          {/* Session Date and Score */}
+          {/* <div className="grid grid-cols-2 gap-4"></div> */}
 
           {/* Status Badge */}
           <div>

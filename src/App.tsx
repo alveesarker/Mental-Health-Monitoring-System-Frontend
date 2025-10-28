@@ -11,6 +11,8 @@ import NotFound from "./pages/NotFound";
 import RecommendationPage from "./pages/recommendationPage";
 import SessionPage from "./pages/SessionPage";
 import Feedback from "./pages/Feedback";
+import EmergencySupport from "./pages/EmergencySupportPage";
+import Crisis from "./pages/Crisis";
 
 // import Alerts from "./pages/Alerts";
 // import Counsellors from "./pages/Counsellors";
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/session/book" element={<CounsellorDirectory />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/moodanalysis" element={<AiMood />} />
+          <Route path="/emergency" element={<EmergencySupport />} />
+          <Route path="/crisis" element={<Crisis />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
