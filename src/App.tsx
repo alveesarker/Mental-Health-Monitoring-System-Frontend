@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import RecommendationPage from "./pages/recommendationPage";
 import SessionPage from "./pages/SessionPage";
+import Feedback from "./pages/Feedback";
 
 // import Alerts from "./pages/Alerts";
 // import Counsellors from "./pages/Counsellors";
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/recommendation" element={<RecommendationPage />} />
           <Route path="/session" element={<SessionPage />} />
           <Route path="/session/book" element={<CounsellorDirectory />} />
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="/moodanalysis" element={<AiMood />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

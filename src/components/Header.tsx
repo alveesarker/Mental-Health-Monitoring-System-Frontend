@@ -22,10 +22,11 @@ import {
   CheckCircle,
   Info,
   LogOut,
-  Settings,
+  MessageSquare,
   Sparkles,
   User,
   XCircle,
+  Compass
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import alveeImg from "../assets/images/alvee.jpg";
@@ -170,25 +171,31 @@ export const Header = () => {
               </Link>
 
               <Link
-                to="/recommendation"
-                className={`${baseLink} ${isActive("/recommendation") ? active : muted}`}
-              >
-                <Sparkles className="h-4 w-4" />
-                Recommendations
-              </Link>
-
-              <Link
                 to="/moodanalysis"
-                className={`${baseLink} ${isActive("/moodanalysis") ? active : muted}`}
+                className={`${baseLink} ${
+                  isActive("/moodanalysis") ? active : muted
+                }`}
               >
                 <Sparkles className="h-4 w-4" />
                 Mood Analysis
               </Link>
 
               <Link
+                to="/recommendation"
+                className={`${baseLink} ${
+                  isActive("/recommendation") ? active : muted
+                }`}
+              >
+                <Compass className="h-4 w-4" />
+                Recommendations
+              </Link>
+
+              <Link
                 to="/session"
                 className={`${baseLink} ${
-                  isActive("/session") || isActive("/session/book") ? active : muted
+                  isActive("/session") || isActive("/session/book")
+                    ? active
+                    : muted
                 }`}
               >
                 <Calendar className="h-4 w-4" />
@@ -196,13 +203,13 @@ export const Header = () => {
               </Link>
 
               <Link
-                to="/settings"
+                to="/feedback"
                 className={`${baseLink} ${
-                  isActive("/settings") ? active : muted
+                  isActive("/feedback") ? active : muted
                 }`}
               >
-                <Settings className="h-4 w-4" />
-                Settings
+                <MessageSquare className="h-4 w-4" />
+                Counsellro Feedback
               </Link>
             </nav>
           </div>

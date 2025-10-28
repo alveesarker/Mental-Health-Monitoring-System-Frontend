@@ -20,7 +20,7 @@ export const RecommendationCard = ({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-2xl p-6 transition-all duration-300",
+        "group relative overflow-hidden rounded-2xl p-6 border-[1px] transition-all duration-300",
         "hover:scale-[1.02] hover:shadow-[var(--shadow-card-hover)]",
         "shadow-[var(--shadow-card)]",
         colorClass
@@ -40,7 +40,7 @@ export const RecommendationCard = ({
           onClick={onViewDetails}
           variant="secondary"
           size="sm"
-          className="mt-2 w-full bg-white/90 hover:bg-white text-foreground shadow-sm"
+          className="mt-2 w-full bg-white/90 hover:bg-white text-foreground shadow-lg"
         >
           View Details
         </Button>
