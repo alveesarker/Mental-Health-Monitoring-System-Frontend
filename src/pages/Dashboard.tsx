@@ -8,13 +8,13 @@ import {
   Users,
 } from "lucide-react";
 import {
+  Area,
+  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
   Cell,
   Legend,
-  Line,
-  LineChart,
   Pie,
   PieChart,
   ResponsiveContainer,
@@ -125,28 +125,71 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart width={600} height={300} data={moodData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                <XAxis dataKey="day" stroke="#aaa" />
-                <YAxis domain={[0, 10]} stroke="#aaa" />
+              <AreaChart data={moodData}>
+                <defs>
+                  <linearGradient id="colorMood" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="hsl(var(--primary))"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="hsl(var(--primary))"
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                  <linearGradient id="colorStress" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="hsl(var(--accent))"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="hsl(var(--accent))"
+                      stopOpacity={0}
+                    />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="hsl(var(--border))"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="day"
+                  stroke="hsl(var(--muted-foreground))"
+                  style={{ fontSize: "12px" }}
+                />
+                <YAxis
+                  stroke="hsl(var(--muted-foreground))"
+                  style={{ fontSize: "12px" }}
+                  domain={[0, 10]}
+                />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#1e1e1e",
-                    border: "1px solid #444",
+                    backgroundColor: "hsl(var(--card))",
+                    border: "1px solid hsl(var(--border))",
                     borderRadius: "8px",
-                    color: "white",
+                    color: "hsl(var(--foreground))",
                   }}
                 />
-
-                <Line
+                <Area
                   type="monotone"
                   dataKey="mood"
-                  stroke="#646cffaa" // <-- use real color so we can SEE it
+                  stroke="hsl(var(--primary))"
+                  fill="url(#colorMood)"
                   strokeWidth={2}
-                  dot={{ r: 4, fill: "#646cffaa" }}
-                  activeDot={{ r: 6 }}
                 />
-              </LineChart>
+                <Area
+                  type="monotone"
+                  dataKey="stress"
+                  stroke="hsl(var(--accent))"
+                  fill="url(#colorStress)"
+                  strokeWidth={2}
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>

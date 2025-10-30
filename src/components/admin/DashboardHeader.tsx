@@ -106,11 +106,11 @@ export function DashboardHeader() {
           <SheetContent side="right" className="w-[400px] sm:w-[480px] p-5">
             <SheetHeader>
               <SheetTitle className="text-2xl font-semibold">
-                Notifications
+                Notifications<Bell className=" inline-block font-bold ml-2"/>
               </SheetTitle>
             </SheetHeader>
 
-            <div className="mt-4 space-y-3 overflow-y-auto max-h-[80vh] pr-2">
+            <div className=" space-y-3 overflow-y-auto max-h-[80vh] pr-2">
               {notifications.map((notif) => {
                 const { color, Icon } = typeConfig[notif.type];
                 return (
