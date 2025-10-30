@@ -95,7 +95,7 @@ export default function Dashboard() {
           value="42"
           icon={UserCog}
           trend={{ value: "+3 this week", isPositive: true }}
-          variant="success"
+          variant="default"
         />
         <StatCard
           title="Ongoing Sessions"
@@ -107,14 +107,14 @@ export default function Dashboard() {
           title="AI Alerts Triggered"
           value="7"
           icon={AlertTriangle}
-          variant="warning"
+          variant="default"
         />
         <StatCard
           title="Daily Logs Submitted"
           value="342"
           icon={FileText}
           trend={{ value: "+18% today", isPositive: true }}
-          variant="success"
+          variant="default"
         />
       </div>
 
