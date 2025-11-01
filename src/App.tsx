@@ -21,6 +21,7 @@ import Users from "./pages/Users";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/admin/AppSidebar";
 import { DashboardHeader } from "./components/admin/DashboardHeader";
+import SessionManagement from "./pages/SessionManagement";
 
 const queryClient = new QueryClient();
 
@@ -63,7 +64,7 @@ const App = () => (
                   <Route path="/users" element={<Users />} />
                   <Route path="/counsellors" element={<Counsellors />} />
                   <Route path="/alerts" element={<Alerts />} />
-                  <Route path="/sessions" element={<Dashboard />} />
+                  <Route path="/sessions" element={<SessionManagement />} />
                   <Route path="/ai-analysis" element={<Dashboard />} />
                   <Route path="/analytics" element={<Dashboard />} />
                   <Route path="/security" element={<Dashboard />} />
