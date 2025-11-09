@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CounsellorFeedback, mockFeedbackData } from "@/data/feedbackData";
-import { ArrowLeft, Eye } from "lucide-react";
+import { Eye } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FeedbackDialog } from "../components/feedback/FeedbackDialog";
