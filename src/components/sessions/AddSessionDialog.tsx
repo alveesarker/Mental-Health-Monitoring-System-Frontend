@@ -1,4 +1,3 @@
-// AddSessionDialog.tsx
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -33,6 +32,7 @@ export const AddSessionDialog = ({
   const [dateTime, setDateTime] = useState("");
 
   const handleSubmit = () => {
+    if (!userName || !counsellor || !specialization || !dateTime) return;
     onAdd({ userName, counsellor, specialization, dateTime });
     onClose();
     setUserName("");

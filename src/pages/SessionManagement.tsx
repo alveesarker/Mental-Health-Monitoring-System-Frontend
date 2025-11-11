@@ -74,13 +74,19 @@ const SessionManagement = () => {
     specialization: string;
     dateTime: string;
   }) => {
-    const newId = `SES-${(sessions.length + 1).toString().padStart(3, "0")}`;
+    const maxId = Math.max(
+      0,
+      ...sessions.map((s) => parseInt(s.id.split("-")[1]))
+    );
+    const newId = `SES-${(maxId + 1).toString().padStart(3, "0")}`;
+
     const session: Session = {
       id: newId,
       progress: 0,
       status: "upcoming",
       ...newSession,
     };
+
     const updated = [...sessions, session];
     setSessions(updated);
     setFilteredSessions(updated);
@@ -89,7 +95,7 @@ const SessionManagement = () => {
   const handleFilter = (filters: {
     search: string;
     counsellor: string;
-    specialization: string;
+    user: string;
     status: string;
     dateRange: { from?: Date; to?: Date };
   }) => {

@@ -1,7 +1,16 @@
+// ======================
+// SessionsFilterBar.tsx
+// ======================
 import { useState } from "react";
-import { Search, Filter, X } from "lucide-react";
+import { Filter, X, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as DatePicker } from "@/components/ui/calendar";
 import {
   Select,
   SelectContent,
@@ -10,46 +19,50 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Session } from "@/pages/SessionManagement";
+import { format } from "date-fns";
 
 interface SessionsFilterBarProps {
   onFilter: (filters: {
     search: string;
     counsellor: string;
-    specialization: string;
+    user: string;
     status: string;
     dateRange: { from?: Date; to?: Date };
   }) => void;
   sessions: Session[];
 }
 
-export const SessionsFilterBar = ({ onFilter, sessions }: SessionsFilterBarProps) => {
+export const SessionsFilterBar = ({
+  onFilter,
+  sessions,
+}: SessionsFilterBarProps) => {
   const [search, setSearch] = useState("");
   const [counsellor, setCounsellor] = useState("all");
-  const [specialization, setSpecialization] = useState("all");
+  const [user, setUser] = useState("all");
   const [status, setStatus] = useState("all");
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
 
-  const counsellors = Array.from(new Set(sessions.map((s) => s.counsellor)));
-  const specializations = Array.from(new Set(sessions.map((s) => s.specialization)));
+  const counsellors = Array.from(
+    new Set(sessions.map((s) => s.counsellor))
+  ).filter(Boolean);
+  const users = Array.from(new Set(sessions.map((s) => s.userName))).filter(
+    Boolean
+  );
 
   const handleApplyFilter = () => {
-    onFilter({
-      search,
-      counsellor,
-      specialization,
-      status,
-      dateRange: {},
-    });
+    onFilter({ search, counsellor, user, status, dateRange });
   };
 
   const handleClearFilters = () => {
     setSearch("");
     setCounsellor("all");
-    setSpecialization("all");
+    setUser("all");
     setStatus("all");
+    setDateRange({});
     onFilter({
       search: "",
       counsellor: "all",
-      specialization: "all",
+      user: "all",
       status: "all",
       dateRange: {},
     });
@@ -62,23 +75,19 @@ export const SessionsFilterBar = ({ onFilter, sessions }: SessionsFilterBarProps
         <span>Filter Sessions</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by user, counsellor, or ID..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+        <Input
+          placeholder="Search by user, counsellor, or ID..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
 
         <Select value={counsellor} onValueChange={setCounsellor}>
           <SelectTrigger>
-            <SelectValue placeholder="Select Counsellor" />
+            <SelectValue placeholder="Counsellor" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Counsellors</SelectItem>
+            <SelectItem value="all">All</SelectItem>
             {counsellors.map((c) => (
               <SelectItem key={c} value={c}>
                 {c}
@@ -87,15 +96,15 @@ export const SessionsFilterBar = ({ onFilter, sessions }: SessionsFilterBarProps
           </SelectContent>
         </Select>
 
-        <Select value={specialization} onValueChange={setSpecialization}>
+        <Select value={user} onValueChange={setUser}>
           <SelectTrigger>
-            <SelectValue placeholder="Select Specialization" />
+            <SelectValue placeholder="User" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Specializations</SelectItem>
-            {specializations.map((s) => (
-              <SelectItem key={s} value={s}>
-                {s}
+            <SelectItem value="all">All</SelectItem>
+            {users.map((u) => (
+              <SelectItem key={u} value={u}>
+                {u}
               </SelectItem>
             ))}
           </SelectContent>
@@ -103,26 +112,56 @@ export const SessionsFilterBar = ({ onFilter, sessions }: SessionsFilterBarProps
 
         <Select value={status} onValueChange={setStatus}>
           <SelectTrigger>
-            <SelectValue placeholder="Session Status" />
+            <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="all">All</SelectItem>
             <SelectItem value="upcoming">Upcoming</SelectItem>
             <SelectItem value="ongoing">Ongoing</SelectItem>
             <SelectItem value="completed">Completed</SelectItem>
             <SelectItem value="cancelled">Cancelled</SelectItem>
           </SelectContent>
         </Select>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="justify-start text-left font-normal"
+            >
+              <Calendar className="mr-2 h-4 w-4" />
+              {dateRange.from ? (
+                dateRange.to ? (
+                  <>
+                    {format(dateRange.from, "MMM dd")} -{" "}
+                    {format(dateRange.to, "MMM dd")}
+                  </>
+                ) : (
+                  format(dateRange.from, "MMM dd, yyyy")
+                )
+              ) : (
+                <span>Pick date range</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="p-0">
+            <DatePicker
+              mode="range"
+              // selected={dateRange}
+              onSelect={(range) =>
+                setDateRange(range ?? { from: undefined, to: undefined })
+              }
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex gap-3">
         <Button onClick={handleApplyFilter} size="sm">
-          <Filter className="h-4 w-4" />
-          Apply Filters
+          <Filter className="h-4 w-4 mr-1" /> Apply
         </Button>
-        <Button onClick={handleClearFilters} variant="outline" size="sm">
-          <X className="h-4 w-4" />
-          Clear Filters
+        <Button onClick={handleClearFilters} size="sm" variant="outline">
+          <X className="h-4 w-4 mr-1" /> Clear
         </Button>
       </div>
     </div>
