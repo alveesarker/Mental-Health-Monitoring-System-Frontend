@@ -64,6 +64,8 @@ const mockSessions: Session[] = [
 
 const SessionManagement = () => {
   const [sessions, setSessions] = useState<Session[]>(mockSessions);
+  const [session, setSession] = useState<Session>(null);
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
   const [filteredSessions, setFilteredSessions] =
     useState<Session[]>(mockSessions);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -92,6 +94,11 @@ const SessionManagement = () => {
     setFilteredSessions(updated);
   };
 
+  const showDetailDialog = (session: Session) => {
+    setIsDetailDialogOpen(true);
+    setSession(session);
+  };
+
   const handleFilter = (filters: {
     search: string;
     counsellor: string;
@@ -114,7 +121,10 @@ const SessionManagement = () => {
           onAddSession={() => setIsDialogOpen(true)} // 👈 open dialog
         />
         <SessionsFilterBar onFilter={handleFilter} sessions={sessions} />
-        <SessionsTable sessions={filteredSessions} />
+        <SessionsTable
+          sessions={filteredSessions}
+          onViewDetails={showDetailDialog}
+        />
       </div>
 
       {/* Dialog */}
@@ -123,6 +133,12 @@ const SessionManagement = () => {
         onClose={() => setIsDialogOpen(false)}
         onAdd={handleAddSession}
       />
+
+      {/* <SessionDetailsDialog
+        open={isDetailDialogOpen}
+        onClose={() => setIsDetailDialogOpen(false)}
+        session={session}
+      /> */}
     </div>
   );
 };

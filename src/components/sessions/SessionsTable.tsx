@@ -1,4 +1,3 @@
-import { SessionDetailsDialog } from "@/components/sessions/SessionDetailsDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,11 +17,13 @@ import {
 } from "@/components/ui/table";
 import { Session, SessionStatus } from "@/pages/SessionManagement";
 import { Edit, Eye, MoreVertical, Star, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // ✅ define props interface
 interface SessionsTableProps {
   sessions: Session[];
+  onViewDetails?: (session: Session) => void;
   onDelete?: (id: string) => void;
   onEdit?: (session: Session) => void;
 }
@@ -42,6 +43,7 @@ const statusConfig: Record<
 
 export const SessionsTable = ({
   sessions,
+  onViewDetails,
   onDelete,
   onEdit,
 }: SessionsTableProps) => {
@@ -96,6 +98,8 @@ export const SessionsTable = ({
       hour12: true,
     });
   };
+
+  const navigate = useNavigate();
 
   const renderStars = (rating: number) => {
     return (
@@ -214,7 +218,9 @@ export const SessionsTable = ({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem onClick={() => handleView(session)}>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/sessions/${session.id}`)}
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
@@ -241,11 +247,11 @@ export const SessionsTable = ({
       </div>
 
       {/* View Details Dialog */}
-      <SessionDetailsDialog
+      {/* <SessionDetailsDialog
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         session={selected || undefined}
-      />
+      /> */}
     </>
   );
 };

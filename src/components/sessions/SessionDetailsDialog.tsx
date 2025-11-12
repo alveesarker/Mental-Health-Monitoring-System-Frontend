@@ -8,14 +8,6 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Session } from "@/pages/SessionManagement";
 import { Star } from "lucide-react";
-import {
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 interface Props {
   open: boolean;
@@ -32,7 +24,7 @@ export const SessionDetailsDialog = ({ open, onClose, session }: Props) => {
   ];
 
   return (
-    <Dialog key={session.id} open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle>Session Details — {session.id}</DialogTitle>
@@ -57,10 +49,10 @@ export const SessionDetailsDialog = ({ open, onClose, session }: Props) => {
 
           <div>
             <strong>Progress:</strong>
-            <Progress value={session.progress || 0} className="h-2 mt-1" />
+            {/* <Progress value={session.progress || 0} className="h-2 mt-1" /> */}
           </div>
 
-          {session.rating && (
+          {/* {session.rating && (
             <div className="flex items-center gap-2">
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -74,26 +66,13 @@ export const SessionDetailsDialog = ({ open, onClose, session }: Props) => {
               ))}
               <span>{session.rating}/5</span>
             </div>
-          )}
+          )} */}
 
-          {session.feedback && (
+          {/* {session.feedback && (
             <div className="bg-muted/40 p-3 rounded-md">
               <p className="italic text-sm">“{session.feedback}”</p>
             </div>
-          )}
-
-          <div>
-            <h3 className="font-semibold mb-2">Progress Overview</h3>
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={progressData}>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="mood" stroke="#22c55e" />
-                <Line type="monotone" dataKey="stress" stroke="#ef4444" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          )} */}
 
           <div className="flex justify-end mt-4">
             <Button variant="outline" onClick={onClose}>
