@@ -14,15 +14,15 @@ import NotFound from "./pages/NotFound";
 // import EmergencySupport from "./pages/EmergencySupportPage";
 // import Crisis from "./pages/Crisis";
 
+import { AppSidebar } from "./components/admin/AppSidebar";
+import { DashboardHeader } from "./components/admin/DashboardHeader";
+import { SidebarProvider } from "./components/ui/sidebar";
 import Alerts from "./pages/Alerts";
 import Counsellors from "./pages/Counsellors";
 import Dashboard from "./pages/Dashboard";
-import Users from "./pages/Users";
-import { SidebarProvider } from "./components/ui/sidebar";
-import { AppSidebar } from "./components/admin/AppSidebar";
-import { DashboardHeader } from "./components/admin/DashboardHeader";
-import SessionManagement from "./pages/SessionManagement";
 import SessionDetailsPage from "./pages/SessionDetailsPage";
+import SessionManagement from "./pages/SessionManagement";
+import Users from "./pages/Users";
 
 const queryClient = new QueryClient();
 
@@ -66,7 +66,10 @@ const App = () => (
                   <Route path="/counsellors" element={<Counsellors />} />
                   <Route path="/alerts" element={<Alerts />} />
                   <Route path="/sessions" element={<SessionManagement />} />
-                  <Route path="/sessions/:id" element={<SessionDetailsPage />} />
+                  <Route
+                    path="/sessions/:id"
+                    element={<SessionDetailsPage />}
+                  />
                   <Route path="/ai-analysis" element={<Dashboard />} />
                   <Route path="/analytics" element={<Dashboard />} />
                   <Route path="/security" element={<Dashboard />} />
