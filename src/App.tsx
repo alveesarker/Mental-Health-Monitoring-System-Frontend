@@ -17,6 +17,8 @@ import NotFound from "./pages/NotFound";
 import { AppSidebar } from "./components/admin/AppSidebar";
 import { DashboardHeader } from "./components/admin/DashboardHeader";
 import { SidebarProvider } from "./components/ui/sidebar";
+import AIAnalysisDetail from "./pages/AIAnalysisDetail";
+import AIAnalysisSearch from "./pages/AIAnalysisSearch";
 import Alerts from "./pages/Alerts";
 import Counsellors from "./pages/Counsellors";
 import Dashboard from "./pages/Dashboard";
@@ -70,10 +72,18 @@ const App = () => (
                     path="/sessions/:id"
                     element={<SessionDetailsPage />}
                   />
-                  <Route path="/ai-analysis" element={<Dashboard />} />
+                  {/* <Route path="/ai-analysis" element={<Dashboard />} /> */}
                   <Route path="/analytics" element={<Dashboard />} />
                   <Route path="/security" element={<Dashboard />} />
                   <Route path="/settings" element={<Dashboard />} />
+                  <Route
+                    path="/ai-analysis"
+                    element={<AIAnalysisSearch />}
+                  />
+                  <Route
+                    path="/ai-analysis/:userId"
+                    element={<AIAnalysisDetail />}
+                  />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>

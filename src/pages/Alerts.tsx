@@ -1,7 +1,30 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, Clock, Phone, User } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertCircleIcon,
+  AlertTriangle,
+  Clock,
+  AlertOctagon,
+  Eye,
+  MoreVertical,
+  Phone,
+  Trash2,
+} from "lucide-react";
 
 const alerts = [
   {
@@ -36,7 +59,6 @@ const alerts = [
 const getRiskColor = (level: string) => {
   switch (level) {
     case "critical":
-      return "destructive";
     case "high":
       return "destructive";
     case "medium":
@@ -49,6 +71,7 @@ const getRiskColor = (level: string) => {
 export default function Alerts() {
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
           Crisis Detection & Alerts
@@ -58,6 +81,7 @@ export default function Alerts() {
         </p>
       </div>
 
+      {/* Summary Cards */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-3">
@@ -72,6 +96,7 @@ export default function Alerts() {
             </p>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -79,12 +104,13 @@ export default function Alerts() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-warning">7</div>
+            <div className="text-3xl font-bold text-yellow-500">7</div>
             <p className="text-xs text-muted-foreground mt-1">
               Awaiting counsellor response
             </p>
           </CardContent>
         </Card>
+
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -92,7 +118,7 @@ export default function Alerts() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-success">12</div>
+            <div className="text-3xl font-bold text-green-600">12</div>
             <p className="text-xs text-muted-foreground mt-1">
               Successfully handled
             </p>
@@ -100,60 +126,80 @@ export default function Alerts() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Active Alerts</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {alerts.map((alert) => (
-            <Card key={alert.id} className="border-l-4 border-l-destructive">
-              <CardContent className="pt-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex gap-4 flex-1">
-                    <div className="rounded-full bg-destructive/10 p-3">
-                      <AlertTriangle className="h-6 w-6 text-destructive" />
-                    </div>
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{alert.issue}</h3>
-                        <Badge variant={getRiskColor(alert.riskLevel)}>
-                          {alert.riskLevel}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <User className="h-3 w-3" />
-                          {alert.userName}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {alert.timestamp}
-                        </div>
-                      </div>
-                      <div className="flex gap-2 pt-2">
-                        <Button size="sm" variant="outline" className="gap-2">
-                          <User className="h-3 w-3" />
-                          View Profile
-                        </Button>
-                        <Button size="sm" className="gap-2 bg-primary">
-                          <Phone className="h-3 w-3" />
-                          Contact Counsellor
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          Send Resources
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+      {/* Alerts Table */}
+      <div className="rounded-xl border bg-card p-4 shadow-sm">
+        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <AlertTriangle className="h-5 w-5 text-destructive" />
+          Active Alerts
+        </h2>
+
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Issue</TableHead>
+              <TableHead>User</TableHead>
+              <TableHead>Risk Level</TableHead>
+              <TableHead>Timestamp</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {alerts.map((alert) => (
+              <TableRow key={alert.id}>
+                <TableCell className="font-medium flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-destructive" />
+                  {alert.issue}
+                </TableCell>
+
+                <TableCell>{alert.userName}</TableCell>
+
+                <TableCell>
+                  <Badge variant={getRiskColor(alert.riskLevel)}>
+                    {alert.riskLevel}
+                  </Badge>
+                </TableCell>
+
+                <TableCell className="flex items-center gap-1 text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  {alert.timestamp}
+                </TableCell>
+
+                <TableCell>
                   <Badge variant="outline" className="capitalize">
                     {alert.status}
                   </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </CardContent>
-      </Card>
+                </TableCell>
+
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-40">
+                      <DropdownMenuItem>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Phone className="h-4 w-4 mr-2" />
+                        Contact
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-destructive">
+                        <AlertOctagon className="h-4 w-4 mr-2" />
+                        Send Alert
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
