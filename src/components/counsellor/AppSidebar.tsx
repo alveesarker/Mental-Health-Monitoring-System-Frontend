@@ -1,4 +1,4 @@
-import { Home, Users, FileText, BrainCircuit } from "lucide-react";
+import { Home, Users, FileText, BrainCircuit, CalendarRange, Calendar } from "lucide-react";
 import { NavLink } from "@/components/counsellor/NavLink";
 
 import {
@@ -16,6 +16,7 @@ import {
 const menuItems = [
   { title: "Dashboard", url: "/counsellor", icon: Home },
   { title: "Assigned Users", url: "/counsellor/users", icon: Users },
+  { title: "Session", url: "/counsellor/session", icon: Calendar},
   { title: "Daily Logs", url: "/counsellor/daily-logs", icon: FileText },
   { title: "AI Analysis", url: "/counsellor/ai-analysis", icon: BrainCircuit },
 ];

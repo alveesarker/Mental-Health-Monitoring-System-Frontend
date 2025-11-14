@@ -44,6 +44,8 @@ import DailyLogs from "./pages/counsellor/DailyLogs";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import { CounsellorAppSidebar } from "./components/counsellor/AppSidebar";
+import CounsellorSession from "./pages/counsellor/CounsellorSession";
+import CounsellorSessionDetails from "./pages/counsellor/CounsellorSessionDetails";
 
 const queryClient = new QueryClient();
 
@@ -135,6 +137,22 @@ const App = () => (
                               element={
                                 <DashboardLayout>
                                   <CounsellorUsers />
+                                </DashboardLayout>
+                              }
+                            />
+                            <Route
+                              path="/session"
+                              element={
+                                <DashboardLayout>
+                                  <CounsellorSession />
+                                </DashboardLayout>
+                              }
+                            />
+                            <Route
+                              path="/sessions/:id"
+                              element={
+                                <DashboardLayout>
+                                  <CounsellorSessionDetails />
                                 </DashboardLayout>
                               }
                             />
