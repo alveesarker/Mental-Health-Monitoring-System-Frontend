@@ -146,7 +146,7 @@ const AdminDailyLogsPage = () => {
                             variant="default"
                             size="sm"
                             onClick={() =>
-                              navigate(`/daily-logs/${user.id}`)
+                              navigate(`/admin/daily-logs/${user.id}`)
                             }
                           >
                             View Daily Logs

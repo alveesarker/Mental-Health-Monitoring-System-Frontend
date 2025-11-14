@@ -29,8 +29,9 @@ import {
   XCircle,
   AlertTriangle
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import alveeImg from "../assets/images/alvee.jpg";
+import { useNavigate } from "react-router-dom";
 
 type NotificationType = "success" | "error" | "info";
 
@@ -141,6 +142,7 @@ const typeConfig: Record<
 
 export const Header = () => {
   const location = useLocation(); // ✅ detect current route
+  const navigate = useNavigate();
 
   // helper to check if route is active
   const isActive = (path: string) => location.pathname === path;
@@ -318,7 +320,7 @@ export const Header = () => {
                   <span>Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/login")}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>

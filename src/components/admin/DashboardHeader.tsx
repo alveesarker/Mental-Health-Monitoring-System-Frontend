@@ -18,6 +18,7 @@ import {
   SheetTrigger,
   Sheet,
 } from "@/components/ui/sheet"; // ✅ fixed import (your import path may vary)
+import { useNavigate } from "react-router-dom";
 
 type NotificationType = "success" | "error" | "info";
 
@@ -84,6 +85,9 @@ const typeConfig: Record<
 };
 
 export function DashboardHeader() {
+
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 backdrop-blur-sm px-6">
       <div className="flex items-center gap-4">
@@ -155,7 +159,7 @@ export function DashboardHeader() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/login")}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

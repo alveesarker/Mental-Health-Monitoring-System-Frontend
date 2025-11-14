@@ -26,15 +26,15 @@ import {
 import { NavLink } from "react-router-dom";
 
 const menuItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "User Management", url: "/users", icon: Users },
-  { title: "Counsellors", url: "/counsellors", icon: UserCog },
-  { title: "Sessions", url: "/sessions", icon: Calendar },
-  { title: "Daily Logs", url: "/daily-logs", icon: Logs},
-  { title: "Recommendation", url: "/recommendation", icon: ScanFace },
+  { title: "Dashboard", url: "/admin/", icon: LayoutDashboard },
+  { title: "User Management", url: "/admin/users", icon: Users },
+  { title: "Counsellors", url: "/admin/counsellors", icon: UserCog },
+  { title: "Sessions", url: "/admin/sessions", icon: Calendar },
+  { title: "Daily Logs", url: "/admin/daily-logs", icon: Logs},
+  { title: "Recommendation", url: "/admin/recommendation", icon: ScanFace },
   // { title: "AI Analysis", url: "/ai-analysis", icon: Brain },
-  { title: "AI-Analysis", url: "/ai-analysis", icon: Brain },
-  { title: "Crisis Alerts", url: "/alerts", icon: AlertTriangle },
+  { title: "AI-Analysis", url: "/admin/ai-analysis", icon: Brain },
+  { title: "Crisis Alerts", url: "/admin/alerts", icon: AlertTriangle },
 ];
 
 export function AppSidebar() {

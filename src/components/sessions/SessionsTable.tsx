@@ -219,7 +219,7 @@ export const SessionsTable = ({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
                           <DropdownMenuItem
-                            onClick={() => navigate(`/sessions/${session.id}`)}
+                            onClick={() => navigate(`/admin/sessions/${session.id}`)}
                           >
                             <Eye className="h-4 w-4 mr-2" />
                             View Details

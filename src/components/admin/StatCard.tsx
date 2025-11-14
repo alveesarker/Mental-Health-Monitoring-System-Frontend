@@ -22,8 +22,8 @@ export function StatCard({
 }: StatCardProps) {
   const variantClasses = {
     default: "bg-primary/10 text-primary",
-    success: "bg-success/10 text-success",
-    warning: "bg-warning/10 text-warning",
+    success: "bg-green-100 text-green-600",
+    warning: "bg-green-100 text-green-600",
     danger: "bg-destructive/10 text-destructive",
   };
 
