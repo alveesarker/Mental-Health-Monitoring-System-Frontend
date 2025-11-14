@@ -148,8 +148,8 @@ export default function Alerts() {
           <TableBody>
             {alerts.map((alert) => (
               <TableRow key={alert.id}>
-                <TableCell className="font-medium flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-destructive" />
+                <TableCell className="font-medium ">
+                  <AlertTriangle className="h-4 w-4 text-destructive inline-block mr-1 mb-[5px]" />
                   {alert.issue}
                 </TableCell>
 
@@ -161,8 +161,8 @@ export default function Alerts() {
                   </Badge>
                 </TableCell>
 
-                <TableCell className="flex items-center gap-1 text-muted-foreground">
-                  <Clock className="h-4 w-4" />
+                <TableCell className="text-muted-foreground">
+                  <Clock className="h-4 w-4 inline-block mr-1 mb-[5px]" />
                   {alert.timestamp}
                 </TableCell>
 

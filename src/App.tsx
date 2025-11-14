@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import { AppSidebar } from "./components/admin/AppSidebar";
 import { DashboardHeader } from "./components/admin/DashboardHeader";
 import { SidebarProvider } from "./components/ui/sidebar";
+import AdminDailyLogsPage from "./pages/AdminDailyLogsPage";
 import AIAnalysisDetail from "./pages/AIAnalysisDetail";
 import AIAnalysisSearch from "./pages/AIAnalysisSearch";
 import Alerts from "./pages/Alerts";
@@ -25,6 +26,7 @@ import Dashboard from "./pages/Dashboard";
 import SessionDetailsPage from "./pages/SessionDetailsPage";
 import SessionManagement from "./pages/SessionManagement";
 import Users from "./pages/Users";
+import AdminDailyLogsDetails from "./pages/AdminDailyLogsDetails";
 
 const queryClient = new QueryClient();
 
@@ -76,14 +78,15 @@ const App = () => (
                   <Route path="/analytics" element={<Dashboard />} />
                   <Route path="/security" element={<Dashboard />} />
                   <Route path="/settings" element={<Dashboard />} />
-                  <Route
-                    path="/ai-analysis"
-                    element={<AIAnalysisSearch />}
-                  />
+                  <Route path="/ai-analysis" element={<AIAnalysisSearch />} />
                   <Route
                     path="/ai-analysis/:userId"
                     element={<AIAnalysisDetail />}
                   />
+
+                  <Route path="/daily-logs" element={<AdminDailyLogsPage />} />
+                  <Route path="/daily-logs/:userId" element={<AdminDailyLogsDetails />} />
+
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>
