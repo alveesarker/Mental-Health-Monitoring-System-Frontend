@@ -17,6 +17,7 @@ import {
   Calendar,
   LayoutDashboard,
   Logs,
+  ScanFace,
   Settings,
   Shield,
   UserCog,
@@ -30,12 +31,10 @@ const menuItems = [
   { title: "Counsellors", url: "/counsellors", icon: UserCog },
   { title: "Sessions", url: "/sessions", icon: Calendar },
   { title: "Daily Logs", url: "/daily-logs", icon: Logs},
+  { title: "Recommendation", url: "/recommendation", icon: ScanFace },
   // { title: "AI Analysis", url: "/ai-analysis", icon: Brain },
   { title: "AI-Analysis", url: "/ai-analysis", icon: Brain },
   { title: "Crisis Alerts", url: "/alerts", icon: AlertTriangle },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
-  { title: "Security Logs", url: "/security", icon: Shield },
-  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
