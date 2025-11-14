@@ -3,16 +3,17 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import CounsellorDirectory from "./components/CounsellorDirectory";
-// import { Header } from "./components/Header";
-// import AiMood from "./pages/AiMood";
-// import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-// import RecommendationPage from "./pages/recommendationPage";
-// import SessionPage from "./pages/SessionPage";
-// import Feedback from "./pages/Feedback";
-// import EmergencySupport from "./pages/EmergencySupportPage";
-// import Crisis from "./pages/Crisis";
+
+import Index from "./pages/Index";
+import RecommendationPage from "./pages/recommendationPage";
+import SessionPage from "./pages/SessionPage";
+import CounsellorDirectory from "./components/CounsellorDirectory";
+import Feedback from "./pages/Feedback";
+import AiMood from "./pages/AiMood";
+import EmergencySupport from "./pages/EmergencySupportPage";
+import Crisis from "./pages/Crisis";
+import { Header } from "./components/Header";
 
 import { AppSidebar } from "./components/admin/AppSidebar";
 import { DashboardHeader } from "./components/admin/DashboardHeader";
@@ -28,15 +29,7 @@ import SessionManagement from "./pages/SessionManagement";
 import Users from "./pages/Users";
 import AdminDailyLogsDetails from "./pages/AdminDailyLogsDetails";
 import AdminRecommendation from "./pages/AdminRecommendation";
-import Index from "./pages/Index";
-import RecommendationPage from "./pages/recommendationPage";
-import SessionPage from "./pages/SessionPage";
-import CounsellorDirectory from "./components/CounsellorDirectory";
-import Feedback from "./pages/Feedback";
-import AiMood from "./pages/AiMood";
-import EmergencySupport from "./pages/EmergencySupportPage";
-import Crisis from "./pages/Crisis";
-import { Header } from "./components/Header";
+
 
 const queryClient = new QueryClient();
 
