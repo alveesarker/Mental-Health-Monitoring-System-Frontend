@@ -16,7 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { ArrowLeft, Brain } from "lucide-react";
+import { ArrowLeft, Brain, Eye } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -126,11 +126,11 @@ const AdminDailyLogsDetails = () => {
           <CardHeader>
             <CardTitle>No Data Found</CardTitle>
             <CardDescription>
-              No AI analysis data available for this user.
+              No daily log data available for this user.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate("/ai-analysis")}>
+            <Button onClick={() => navigate("/admin/ai-analysis")}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Search
             </Button>
@@ -139,17 +139,6 @@ const AdminDailyLogsDetails = () => {
       </div>
     );
   }
-
-  const getSentimentColor = (sentiment: string) => {
-    switch (sentiment.toLowerCase()) {
-      case "positive":
-        return "bg-success text-success-foreground";
-      case "negative":
-        return "bg-destructive text-destructive-foreground";
-      default:
-        return "bg-secondary text-secondary-foreground";
-    }
-  };
 
   const getSentimentVariant = (
     sentiment: string
@@ -167,13 +156,12 @@ const AdminDailyLogsDetails = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/ai-analysis")}
+            onClick={() => navigate("/admin/daily-logs")}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -195,84 +183,76 @@ const AdminDailyLogsDetails = () => {
       <main className="container mx-auto px-4 py-8">
         <Card>
           <CardHeader>
-            <CardTitle>Analysis Records</CardTitle>
+            <CardTitle>Recent Daily Submissions</CardTitle>
             <CardDescription>
-              {userAnalysis.analyses.length} Daily Logs record
-              {userAnalysis.analyses.length !== 1 ? "s" : ""} found for this
-              user
+              Latest mood and wellness entries from this user
             </CardDescription>
           </CardHeader>
+
           <CardContent>
-            <div className="rounded-md border border-border">
+            <div className="rounded-md border border-border overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/50">
-                    <TableHead className="font-semibold">Log ID</TableHead>
-                    <TableHead className="font-semibold">Date & Time</TableHead>
-                    <TableHead className="font-semibold">Mood</TableHead>
+                    <TableHead className="font-semibold">Date</TableHead>
+                    <TableHead className="font-semibold">Feeling</TableHead>
                     <TableHead className="font-semibold">Stress Level</TableHead>
-                    <TableHead className="font-semibold">Notes</TableHead>
+                    <TableHead className="font-semibold">Sleep (hrs)</TableHead>
+                    <TableHead className="font-semibold">Daily Notes</TableHead>
+                    <TableHead className="font-semibold text-right">
+                      Actions
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
+
                 <TableBody>
-                  {userAnalysis.analyses.map((analysis) => (
+                  {userAnalysis.analyses.map((log) => (
                     <TableRow
-                      key={analysis.id}
+                      key={log.id}
                       className="hover:bg-muted/30 transition-colors"
                     >
-                      <TableCell className="font-medium">
-                        {analysis.id}
+                      {/* DATE */}
+                      <TableCell className="text-muted-foreground">
+                        {format(new Date(log.timestamp), "MMM dd, yyyy HH:mm")}
                       </TableCell>
+
+                      {/* FEELING */}
                       <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-medium">
-                            {format(
-                              new Date(analysis.timestamp),
-                              "MMM dd, yyyy"
-                            )}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {format(new Date(analysis.timestamp), "HH:mm:ss")}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={getSentimentVariant(analysis.sentiment)}
-                        >
-                          {analysis.sentiment}
+                        <Badge variant={getSentimentVariant(log.sentiment)}>
+                          {log.sentiment}
                         </Badge>
                       </TableCell>
+
+                      {/* STRESS LEVEL */}
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className="h-2 w-16 overflow-hidden rounded-full bg-secondary">
-                            <div
-                              className="h-full bg-primary transition-all"
-                              style={{ width: `${analysis.confidence * 100}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium">
-                            {(analysis.confidence * 100).toFixed(0)}%
-                          </span>
-                        </div>
+                        <span className="font-semibold text-primary">
+                          {(log.confidence * 10).toFixed(1)}/10
+                        </span>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {analysis.topics.slice(0, 2).map((topic, index) => (
-                            <Badge
-                              key={index}
-                              variant="outline"
-                              className="text-xs"
-                            >
-                              {topic}
-                            </Badge>
-                          ))}
-                          {analysis.topics.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{analysis.topics.length - 2}
-                            </Badge>
-                          )}
-                        </div>
+
+                      {/* SLEEP – mock value */}
+                      <TableCell className="text-muted-foreground">
+                        {Math.floor(log.confidence * 8) + 4}
+                      </TableCell>
+
+                      {/* DAILY NOTES */}
+                      <TableCell className="max-w-md">
+                        <p className="text-sm text-muted-foreground truncate">
+                          {log.summary}
+                        </p>
+                      </TableCell>
+
+                      {/* ACTIONS */}
+                      <TableCell className="text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-primary hover:text-primary hover:bg-primary/10"
+                          onClick={() => setSelectedAnalysis(log)}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

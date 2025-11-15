@@ -46,6 +46,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { CounsellorAppSidebar } from "./components/counsellor/AppSidebar";
 import CounsellorSession from "./pages/counsellor/CounsellorSession";
 import CounsellorSessionDetails from "./pages/counsellor/CounsellorSessionDetails";
+import DailyLogsUsers from "./pages/counsellor/DailyLogsUsers";
 
 const queryClient = new QueryClient();
 
@@ -158,6 +159,14 @@ const App = () => (
                             />
                             <Route
                               path="/daily-logs"
+                              element={
+                                <DashboardLayout>
+                                  <DailyLogsUsers />
+                                </DashboardLayout>
+                              }
+                            />
+                            <Route
+                              path="/daily-logs/:id"
                               element={
                                 <DashboardLayout>
                                   <DailyLogs />

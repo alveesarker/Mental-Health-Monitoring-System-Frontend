@@ -9,60 +9,115 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, FileText, Star } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
+import { FileText, MoreVertical, Star, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-const sessionHistory = [
+const statusConfig: Record<
+  SessionStatus,
   {
-    id: "S-1234",
-    patient: "Emily Johnson",
-    date: "Oct 20, 2025",
-    duration: "60 min",
+    label: string;
+    variant: "default" | "secondary" | "destructive" | "outline";
+  }
+> = {
+  upcoming: { label: "Upcoming", variant: "default" },
+  ongoing: { label: "Ongoing", variant: "secondary" },
+  completed: { label: "Completed", variant: "outline" },
+  cancelled: { label: "Cancelled", variant: "destructive" },
+};
+
+export type SessionStatus = "upcoming" | "ongoing" | "completed" | "cancelled";
+
+export interface CounsellorSession {
+  id: string;
+  userName: string;
+  counsellor: string;
+  specialization: string;
+  dateTime: string;
+  status: SessionStatus;
+  feedback?: string;
+  rating?: number;
+  progress: number;
+}
+
+const sessions: CounsellorSession[] = [
+  {
+    id: "SES-001",
+    userName: "Sarah Johnson",
+    counsellor: "Dr. Robert Wilson",
+    specialization: "Anxiety & Depression",
+    dateTime: "2025-11-03T14:00:00",
+    status: "upcoming",
+    progress: 75,
+  },
+  {
+    id: "SES-002",
+    userName: "Michael Chen",
+    counsellor: "Dr. Emily Carter",
+    specialization: "Stress Management",
+    dateTime: "2025-11-01T10:30:00",
+    status: "completed",
+    feedback: "Very helpful session, great insights",
     rating: 5,
-    hasNotes: true,
+    progress: 100,
   },
   {
-    id: "S-1233",
-    patient: "Michael Brown",
-    date: "Oct 19, 2025",
-    duration: "45 min",
-    rating: 4,
-    hasNotes: true,
+    id: "SES-003",
+    userName: "Jessica Martinez",
+    counsellor: "Dr. David Thompson",
+    specialization: "Relationship Counseling",
+    dateTime: "2025-11-01T15:00:00",
+    status: "ongoing",
+    progress: 45,
   },
   {
-    id: "S-1232",
-    patient: "Sarah Davis",
-    date: "Oct 18, 2025",
-    duration: "60 min",
-    rating: 5,
-    hasNotes: false,
-  },
-  {
-    id: "S-1231",
-    patient: "James Wilson",
-    date: "Oct 17, 2025",
-    duration: "50 min",
-    rating: 4,
-    hasNotes: true,
-  },
-  {
-    id: "S-1232",
-    patient: "Sarah Davis",
-    date: "Oct 18, 2025",
-    duration: "60 min",
-    rating: 5,
-    hasNotes: false,
-  },
-  {
-    id: "S-1231",
-    patient: "James Wilson",
-    date: "Oct 17, 2025",
-    duration: "50 min",
-    rating: 4,
-    hasNotes: true,
+    id: "SES-004",
+    userName: "Alex Kumar",
+    counsellor: "Dr. Robert Wilson",
+    specialization: "Career Guidance",
+    dateTime: "2025-10-28T11:00:00",
+    status: "cancelled",
+    progress: 0,
   },
 ];
 
 export const SessionHistory = () => {
+  const formatDateTime = (dateTime: string) => {
+    const date = new Date(dateTime);
+    return date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const navigate = useNavigate();
+
+  const renderStars = (rating: number) => {
+    return (
+      <div className="flex gap-0.5">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`h-3 w-3 ${
+              star <= rating
+                ? "fill-warning text-warning"
+                : "text-muted-foreground"
+            }`}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <Card className="border-[1px] shadow-md rounded-xl hover:shadow-lg transition-shadow duration-300 bg-card/80 backdrop-blur-sm">
       {" "}
@@ -78,86 +133,61 @@ export const SessionHistory = () => {
         <div className="rounded-lg border border-border/50 overflow-hidden bg-background/50">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/40">
-                <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
-                  Session ID
-                </TableHead>
-                <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
-                  Counsellor Name
-                </TableHead>
-                <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
-                  Date
-                </TableHead>
-                <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
-                  Duration
-                </TableHead>
-                <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
-                  My Rating
-                </TableHead>
-                <TableHead className="font-semibold text-muted-foreground uppercase text-xs tracking-wide">
-                  Notes
-                </TableHead>
-                <TableHead className="font-semibold text-muted-foreground text-right uppercase text-xs tracking-wide">
-                  Action
-                </TableHead>
+              <TableRow className="bg-muted/50">
+                <TableHead>Session ID</TableHead>
+                <TableHead>Counsellor</TableHead>
+                <TableHead>Date & Time</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
-              {sessionHistory.map((session) => (
-                <TableRow
-                  key={session.id}
-                  className="hover:bg-muted/30 transition-colors cursor-pointer"
-                >
-                  <TableCell className="font-medium text-primary">
-                    {session.id}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {session.patient}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {session.date}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {session.duration}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium text-foreground">
-                        {session.rating}.0
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {session.hasNotes ? (
-                      <Badge
-                        variant="outline"
-                        className="bg-green-100 text-green-700 border-green-200"
-                      >
-                        Available
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="outline"
-                        className="bg-gray-100 text-gray-500 border-gray-200"
-                      >
-                        None
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="gap-1.5 text-primary hover:bg-primary/5"
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                      <span className="font-medium">View</span>
-                    </Button>
+              {sessions.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={9}
+                    className="text-center py-8 text-muted-foreground"
+                  >
+                    No sessions found matching your filters
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                sessions.map((session) => (
+                  <TableRow
+                    key={session.id}
+                    className="hover:bg-muted/30 transition-colors"
+                  >
+                    <TableCell>{session.id}</TableCell>
+                    <TableCell>{session.counsellor}</TableCell>
+                    <TableCell>{formatDateTime(session.dateTime)}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={statusConfig[session.status].variant}
+                        className="font-medium"
+                      >
+                        {statusConfig[session.status].label}
+                      </Badge>
+                    </TableCell>
+
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-40">
+                          <DropdownMenuItem className="text-destructive">
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Cancel
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>

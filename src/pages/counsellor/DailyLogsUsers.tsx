@@ -15,7 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Brain, Search } from "lucide-react";
+import { Brain, Logs, Search } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -36,7 +36,7 @@ const mockUsers: User[] = [
   { id: "USR008", name: "Henry Taylor", email: "henry.taylor@example.com" },
 ];
 
-const AIAnalysisSearch = () => {
+const DailyLogsUsers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState<User[]>(mockUsers);
   const navigate = useNavigate();
@@ -68,14 +68,14 @@ const AIAnalysisSearch = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <Brain className="h-5 w-5 text-primary-foreground" />
+              <Logs className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-foreground">
-                AI Analysis Management
+                Daily Logs
               </h1>
               <p className="text-sm text-muted-foreground">
-                Search and manage user AI analysis data
+                Search and manage user Daily logs data
               </p>
             </div>
           </div>
@@ -87,7 +87,7 @@ const AIAnalysisSearch = () => {
           <CardHeader>
             <CardTitle>User Search</CardTitle>
             <CardDescription>
-              Enter a User ID or Name to find their AI analysis data
+              Enter a User ID or Name to find their Daily logs
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -146,10 +146,10 @@ const AIAnalysisSearch = () => {
                             variant="default"
                             size="sm"
                             onClick={() =>
-                              navigate(`/admin/ai-analysis/${user.id}`)
+                              navigate(`/counsellor/daily-logs/${user.id}`)
                             }
                           >
-                            View AI Data
+                            View Daily Logs
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -165,4 +165,4 @@ const AIAnalysisSearch = () => {
   );
 };
 
-export default AIAnalysisSearch;
+export default DailyLogsUsers;

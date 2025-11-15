@@ -85,7 +85,6 @@ export const SessionCard = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-card">
-              <DropdownMenuItem>View Details</DropdownMenuItem>
               <DropdownMenuItem>Reschedule</DropdownMenuItem>
               <DropdownMenuItem className="text-destructive">
                 Cancel

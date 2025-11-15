@@ -180,7 +180,7 @@ const AIAnalysisDetail = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate("/ai-analysis")}
+              onClick={() => navigate("/admin/ai-analysis")}
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
