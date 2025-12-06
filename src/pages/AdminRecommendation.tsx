@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, PlusCircle, Search, Trash2 } from "lucide-react";
+import { Edit, Eye, PlusCircle, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 export interface Recommendation {
@@ -235,6 +235,10 @@ export default function AdminRecommendation() {
                       }}
                     >
                       <Eye className="h-4 w-4" />
+                    </Button>
+
+                    <Button variant="outline" size="icon">
+                      <Edit className="h-4 w-4" />
                     </Button>
 
                     {/* Delete */}

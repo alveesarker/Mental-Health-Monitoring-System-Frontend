@@ -1,4 +1,4 @@
-import { Home, Users, FileText, BrainCircuit, CalendarRange, Calendar } from "lucide-react";
+import { Home, Users, FileText, BrainCircuit, CalendarRange, Calendar, NotebookPen } from "lucide-react";
 import { NavLink } from "@/components/counsellor/NavLink";
 
 import {
@@ -19,6 +19,7 @@ const menuItems = [
   { title: "Session", url: "/counsellor/session", icon: Calendar},
   { title: "Daily Logs", url: "/counsellor/daily-logs", icon: FileText },
   { title: "AI Analysis", url: "/counsellor/ai-analysis", icon: BrainCircuit },
+  { title: "Personalized Recommendation", url: "/counsellor/recommendations", icon: NotebookPen },
 ];
 
 export function CounsellorAppSidebar() {
@@ -52,7 +53,7 @@ export function CounsellorAppSidebar() {
                       to={item.url}
                       end
                       className="hover:bg-sidebar-accent transition-colors"
-                      activeClassName="bg-sidebar-primary text-sidebar-primary-foreground font-medium"
+                      activeClassName="font-bold"
                     >
                       <item.icon className="h-4 w-4" />
                       {!isCollapsed && <span>{item.title}</span>}

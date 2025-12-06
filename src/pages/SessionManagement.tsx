@@ -1,98 +1,46 @@
-// SessionManagement.tsx
-import { AddSessionDialog } from "@/components/sessions/AddSessionDialog"; // 👈 new import
 import { SessionsFilterBar } from "@/components/sessions/SessionsFilterBar";
 import { SessionsHeader } from "@/components/sessions/SessionsHeader";
-import { SessionsTable } from "@/components/sessions/SessionsTable";
-import { useState } from "react";
-
-// ... your Session and mockSessions as before
-
-export type SessionStatus = "upcoming" | "ongoing" | "completed" | "cancelled";
-
-export interface Session {
-  id: string;
-  userName: string;
-  counsellor: string;
-  specialization: string;
-  dateTime: string;
-  status: SessionStatus;
-  feedback?: string;
-  rating?: number;
-  progress: number;
-}
-
-const mockSessions: Session[] = [
-  {
-    id: "SES-001",
-    userName: "Sarah Johnson",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Anxiety & Depression",
-    dateTime: "2025-11-03T14:00:00",
-    status: "upcoming",
-    progress: 75,
-  },
-  {
-    id: "SES-002",
-    userName: "Michael Chen",
-    counsellor: "Dr. Emily Carter",
-    specialization: "Stress Management",
-    dateTime: "2025-11-01T10:30:00",
-    status: "completed",
-    feedback: "Very helpful session, great insights",
-    rating: 5,
-    progress: 100,
-  },
-  {
-    id: "SES-003",
-    userName: "Jessica Martinez",
-    counsellor: "Dr. David Thompson",
-    specialization: "Relationship Counseling",
-    dateTime: "2025-11-01T15:00:00",
-    status: "ongoing",
-    progress: 45,
-  },
-  {
-    id: "SES-004",
-    userName: "Alex Kumar",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Career Guidance",
-    dateTime: "2025-10-28T11:00:00",
-    status: "cancelled",
-    progress: 0,
-  },
-];
+import { Session, SessionsTable } from "@/components/sessions/SessionsTable";
+import { useEffect, useState } from "react";
 
 const SessionManagement = () => {
-  const [sessions, setSessions] = useState<Session[]>(mockSessions);
-  const [session, setSession] = useState<Session>(null);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [session, setSession] = useState<Session | null>(null);
   const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
-  const [filteredSessions, setFilteredSessions] =
-    useState<Session[]>(mockSessions);
+  const [filteredSessions, setFilteredSessions] = useState<Session[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleAddSession = (newSession: {
-    userName: string;
-    counsellor: string;
-    specialization: string;
-    dateTime: string;
-  }) => {
-    const maxId = Math.max(
-      0,
-      ...sessions.map((s) => parseInt(s.id.split("-")[1]))
-    );
-    const newId = `SES-${(maxId + 1).toString().padStart(3, "0")}`;
-
-    const session: Session = {
-      id: newId,
-      progress: 0,
-      status: "upcoming",
-      ...newSession,
-    };
-
-    const updated = [...sessions, session];
-    setSessions(updated);
-    setFilteredSessions(updated);
+  // Fetch sessions from API
+  const fetchSessions = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/sessions");
+      const data = await res.json();
+      // map API fields if needed
+      const mappedData: Session[] = data.map((s) => ({
+        sessionID: s.sessionID,
+        sessionDate: s.sessionDate,
+        status: s.status,
+        duration: s.duration,
+        patientID: s.patientID,
+        counsellorID: s.counsellorID,
+        sessionType: s.sessionType,
+        sessionTime: s.sessionTime,
+        cname: s.cname,
+        pname: s.pname, // adjust based on your API
+        link: s.link,
+        counsellingCenter: s.counsellingCenter,
+        roomNumber: s.roomNumber,
+      }));
+      setSessions(mappedData);
+      setFilteredSessions(mappedData);
+    } catch (err) {
+      console.error("Failed to fetch sessions:", err);
+    }
   };
+
+  useEffect(() => {
+    fetchSessions();
+  }, []);
 
   const showDetailDialog = (session: Session) => {
     setIsDetailDialogOpen(true);
@@ -106,11 +54,34 @@ const SessionManagement = () => {
     status: string;
     dateRange: { from?: Date; to?: Date };
   }) => {
-    // same filtering logic
+    let filtered = [...sessions];
+
+    if (filters.search) {
+      filtered = filtered.filter(
+        (s) =>
+          s.cname?.toLowerCase().includes(filters.search.toLowerCase()) ||
+          s.pname?.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+    if (filters.status) {
+      filtered = filtered.filter((s) => s.status === filters.status);
+    }
+    if (filters.dateRange.from) {
+      filtered = filtered.filter(
+        (s) => new Date(s.sessionDate) >= filters.dateRange.from!
+      );
+    }
+    if (filters.dateRange.to) {
+      filtered = filtered.filter(
+        (s) => new Date(s.sessionDate) <= filters.dateRange.to!
+      );
+    }
+
+    setFilteredSessions(filtered);
   };
 
   const handleRefresh = () => {
-    setFilteredSessions(sessions);
+    fetchSessions();
   };
 
   return (
@@ -118,21 +89,17 @@ const SessionManagement = () => {
       <div className="container mx-auto p-6 space-y-6">
         <SessionsHeader
           onRefresh={handleRefresh}
-          onAddSession={() => setIsDialogOpen(true)} // 👈 open dialog
+          onAddSession={() => setIsDialogOpen(true)}
         />
         <SessionsFilterBar onFilter={handleFilter} sessions={sessions} />
-        <SessionsTable
-          sessions={filteredSessions}
-          onViewDetails={showDetailDialog}
-        />
+        <SessionsTable />
       </div>
 
-      {/* Dialog */}
-      <AddSessionDialog
+      {/* <AddSessionDialog
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onAdd={handleAddSession}
-      />
+      /> */}
 
       {/* <SessionDetailsDialog
         open={isDetailDialogOpen}

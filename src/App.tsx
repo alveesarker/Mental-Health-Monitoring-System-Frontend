@@ -22,8 +22,6 @@ import { AppSidebar } from "./components/admin/AppSidebar";
 import { DashboardHeader } from "./components/admin/DashboardHeader";
 import { SidebarProvider } from "./components/ui/sidebar";
 import AdminDailyLogsDetails from "./pages/AdminDailyLogsDetails";
-import AdminDailyLogsPage from "./pages/AdminDailyLogsPage";
-import AdminRecommendation from "./pages/AdminRecommendation";
 import AIAnalysisDetail from "./pages/AIAnalysisDetail";
 import AIAnalysisSearch from "./pages/AIAnalysisSearch";
 import Alerts from "./pages/Alerts";
@@ -32,21 +30,23 @@ import Dashboard from "./pages/Dashboard";
 import SessionDetailsPage from "./pages/SessionDetailsPage";
 import SessionManagement from "./pages/SessionManagement";
 import Users from "./pages/Users";
+import ADailyLog from "./pages/ADailyLog";
 
 // Counsellor Components
-import { DashboardLayout } from "./components/counsellor/DashboardLayout";
 import CounsellorDashBoard from "../src/pages/counsellor/Dashboard";
-import CounsellorUsers from "../src/pages/counsellor/Users"
+import CounsellorUsers from "../src/pages/counsellor/Users";
+import { DashboardLayout } from "./components/counsellor/DashboardLayout";
 import AIAnalysis from "./pages/counsellor/AIAnalysis";
 import DailyLogs from "./pages/counsellor/DailyLogs";
 
 // Auth
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
-import { CounsellorAppSidebar } from "./components/counsellor/AppSidebar";
 import CounsellorSession from "./pages/counsellor/CounsellorSession";
 import CounsellorSessionDetails from "./pages/counsellor/CounsellorSessionDetails";
 import DailyLogsUsers from "./pages/counsellor/DailyLogsUsers";
+import Recommendations from "./pages/counsellor/Recommendations";
+import ARecommendation from "./pages/ARecommendation";
 
 const queryClient = new QueryClient();
 
@@ -99,7 +99,7 @@ const App = () => (
                             />
                             <Route
                               path="/daily-logs"
-                              element={<AdminDailyLogsPage />}
+                              element={<ADailyLog />}
                             />
                             <Route
                               path="/daily-logs/:userId"
@@ -107,7 +107,7 @@ const App = () => (
                             />
                             <Route
                               path="/recommendation"
-                              element={<AdminRecommendation />}
+                              element={<ARecommendation />}
                             />
                             <Route path="*" element={<NotFound />} />
                           </Routes>
@@ -124,65 +124,73 @@ const App = () => (
               path="/counsellor/*"
               element={
                 <ProtectedRoute allowed={["counsellor"]}>
-                          <Routes>
-                            <Route
-                              path="/"
-                              element={
-                                <DashboardLayout>
-                                  <CounsellorDashBoard />
-                                </DashboardLayout>
-                              }
-                            />
-                            <Route
-                              path="/users"
-                              element={
-                                <DashboardLayout>
-                                  <CounsellorUsers />
-                                </DashboardLayout>
-                              }
-                            />
-                            <Route
-                              path="/session"
-                              element={
-                                <DashboardLayout>
-                                  <CounsellorSession />
-                                </DashboardLayout>
-                              }
-                            />
-                            <Route
-                              path="/sessions/:id"
-                              element={
-                                <DashboardLayout>
-                                  <CounsellorSessionDetails />
-                                </DashboardLayout>
-                              }
-                            />
-                            <Route
-                              path="/daily-logs"
-                              element={
-                                <DashboardLayout>
-                                  <DailyLogsUsers />
-                                </DashboardLayout>
-                              }
-                            />
-                            <Route
-                              path="/daily-logs/:id"
-                              element={
-                                <DashboardLayout>
-                                  <DailyLogs />
-                                </DashboardLayout>
-                              }
-                            />
-                            <Route
-                              path="/ai-analysis"
-                              element={
-                                <DashboardLayout>
-                                  <AIAnalysis />
-                                </DashboardLayout>
-                              }
-                            />
-                            <Route path="*" element={<NotFound />} />
-                          </Routes>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <DashboardLayout>
+                          <CounsellorDashBoard />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/users"
+                      element={
+                        <DashboardLayout>
+                          <CounsellorUsers />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/session"
+                      element={
+                        <DashboardLayout>
+                          <CounsellorSession />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/sessions/:id"
+                      element={
+                        <DashboardLayout>
+                          <CounsellorSessionDetails />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/daily-logs"
+                      element={
+                        <DashboardLayout>
+                          <DailyLogsUsers />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/daily-logs/:id"
+                      element={
+                        <DashboardLayout>
+                          <DailyLogs />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/ai-analysis"
+                      element={
+                        <DashboardLayout>
+                          <AIAnalysis />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route
+                      path="/recommendations"
+                      element={
+                        <DashboardLayout>
+                          <Recommendations />
+                        </DashboardLayout>
+                      }
+                    />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
                 </ProtectedRoute>
               }
             />

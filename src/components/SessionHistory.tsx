@@ -99,25 +99,6 @@ export const SessionHistory = () => {
     });
   };
 
-  const navigate = useNavigate();
-
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex gap-0.5">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`h-3 w-3 ${
-              star <= rating
-                ? "fill-warning text-warning"
-                : "text-muted-foreground"
-            }`}
-          />
-        ))}
-      </div>
-    );
-  };
-
   return (
     <Card className="border-[1px] shadow-md rounded-xl hover:shadow-lg transition-shadow duration-300 bg-card/80 backdrop-blur-sm">
       {" "}
@@ -195,30 +176,3 @@ export const SessionHistory = () => {
     </Card>
   );
 };
-
-// import { Star, FileText, Eye } from "lucide-react";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-// import { Badge } from "@/components/ui/badge";
-// import {
-// Table,
-// TableBody,
-// TableCell,
-// TableHead,
-// TableHeader,
-// TableRow,
-// } from "@/components/ui/table";
-
-// const sessionHistory = [
-// { id: "S-1234", patient: "Emily Johnson", date: "Oct 20, 2025", duration: "60 min", rating: 5, hasNotes: true },
-// { id: "S-1233", patient: "Michael Brown", date: "Oct 19, 2025", duration: "45 min", rating: 4, hasNotes: true },
-// { id: "S-1232", patient: "Sarah Davis", date: "Oct 18, 2025", duration: "60 min", rating: 5, hasNotes: false },
-// { id: "S-1231", patient: "James Wilson", date: "Oct 17, 2025", duration: "50 min", rating: 4, hasNotes: true },
-// ];
-
-// export const SessionHistory = () => {
-// return (
-// ```
-
-// );
-// };

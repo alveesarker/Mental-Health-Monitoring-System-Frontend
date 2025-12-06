@@ -1,82 +1,29 @@
-// src/pages/SessionDetailsPage.tsx
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import {
-  ArrowLeft,
-  Briefcase,
-  CalendarDays,
-  Star,
-  User,
-  UserSquare2,
-} from "lucide-react";
+import { ArrowLeft, Star } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Session } from "./SessionManagement";
+import { formatToISODate } from "../lib/dateFormater";
 
-interface SessionDetailsPageProps {
-  sessions?: Session[];
-}
-
-const mockSessions: Session[] = [
-  {
-    id: "SES-001",
-    userName: "Sarah Johnson",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Anxiety & Depression",
-    dateTime: "2025-11-03T14:00:00",
-    status: "upcoming",
-    progress: 75,
-  },
-  {
-    id: "SES-002",
-    userName: "Michael Chen",
-    counsellor: "Dr. Emily Carter",
-    specialization: "Stress Management",
-    dateTime: "2025-11-01T10:30:00",
-    status: "completed",
-    feedback: "Very helpful session, great insights",
-    rating: 5,
-    progress: 100,
-  },
-  {
-    id: "SES-003",
-    userName: "Jessica Martinez",
-    counsellor: "Dr. David Thompson",
-    specialization: "Relationship Counseling",
-    dateTime: "2025-11-01T15:00:00",
-    status: "ongoing",
-    progress: 45,
-  },
-  {
-    id: "SES-004",
-    userName: "Alex Kumar",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Career Guidance",
-    dateTime: "2025-10-28T11:00:00",
-    status: "cancelled",
-    progress: 0,
-  },
-];
-
-const SessionDetailsPage = ({
-  sessions = mockSessions,
-}: SessionDetailsPageProps) => {
+export default function SessionDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [session, setSession] = useState(null);
 
-  const session = sessions.find((s) => s.id === id);
+  useEffect(() => {
+    const load = async () => {
+      const res = await fetch(
+        `http://localhost:5000/sessions/session-details/${id}`
+      );
+      const data = await res.json();
+      setSession(data);
+    };
+    load();
+  }, [id]);
 
-  if (!session) {
-    return (
-      <div className="p-6">
-        <p className="text-lg font-semibold">Session not found</p>
-        <Button className="mt-4" onClick={() => navigate(-1)}>
-          Back
-        </Button>
-      </div>
-    );
-  }
+  if (!session) return <p className="p-6">Loading...</p>;
 
   const statusColors: Record<string, string> = {
     upcoming: "bg-blue-100 text-blue-800",
@@ -85,25 +32,45 @@ const SessionDetailsPage = ({
     cancelled: "bg-red-100 text-red-800",
   };
 
+  const progressItems = [
+    { label: "Stability", value: session.stabilityScore },
+    { label: "Stress Level", value: session.stressScore },
+    { label: "Depression Level", value: session.depressionLevel },
+    { label: "Work Performance", value: session.workPerformanceScore },
+    { label: "Energy Level", value: session.energyLevel },
+    { label: "Fatigue Level", value: session.fatigueLevel },
+  ];
+
+  function to12Hour(time24) {
+    const [hour, minute] = time24.split(":");
+    return new Date(0, 0, 0, hour, minute).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+  }
+
+  const formatDateTime = (dateTime: string) => {
+    const date = new Date(dateTime);
+    return date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
-    <div className="max-w-4xl mx-auto py-10 px-6 space-y-8">
+    <div className="max-w-5xl mx-auto py-10 px-6 space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Session Details</h1>
-          <p className="text-muted-foreground mt-1">
-            Comprehensive information about session{" "}
-            <span className="font-medium">{session.id}</span>
-          </p>
-        </div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Session Details</h1>
         <Button variant="outline" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back
         </Button>
       </div>
 
-      {/* Summary Card */}
-      <Card className="border-border shadow-sm">
+      {/* Session Overview */}
+      <Card>
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
             <span>Session Overview</span>
@@ -112,99 +79,112 @@ const SessionDetailsPage = ({
             </Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-sm">
-          <div className="flex items-center gap-2">
-            <User className="h-4 w-4 text-muted-foreground" />
-            <span>
-              <strong>User:</strong> {session.userName}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <UserSquare2 className="h-4 w-4 text-muted-foreground" />
-            <span>
-              <strong>Counsellor:</strong> {session.counsellor}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
-            <span>
-              <strong>Specialization:</strong> {session.specialization}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
-            <span>
-              <strong>Date & Time:</strong>{" "}
-              {new Date(session.dateTime).toLocaleString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              })}
-            </span>
-          </div>
+
+        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <p>
+            <strong>Patient:</strong> {session.patientName}
+          </p>
+          <p>
+            <strong>Counsellor:</strong> {session.counsellorName}
+          </p>
+          <p>
+            <strong>Type:</strong> {session.sessionType}
+          </p>
+          <p>
+            <strong>Duration:</strong> {session.duration} min
+          </p>
+          <p>
+            <strong>Date:</strong> {formatDateTime(session.sessionDate)}
+          </p>
+          <p>
+            <strong>Time:</strong> {to12Hour(session.sessionTime)}
+          </p>
         </CardContent>
       </Card>
 
-      {/* Progress & Rating */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <Card className="border-border shadow-sm">
-          <CardHeader>
-            <CardTitle>Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-muted-foreground">Completion</span>
-              <span className="font-medium">{session.progress}%</span>
-            </div>
-            <Progress value={session.progress} className="h-2" />
-          </CardContent>
-        </Card>
-
-        <Card className="border-border shadow-sm">
-          <CardHeader>
-            <CardTitle>Feedback & Rating</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {session.rating ? (
-              <div className="flex items-center gap-3">
-                <div className="flex gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < session.rating
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-muted-foreground"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-medium">{session.rating}/5</span>
+      {/* Progress Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Progress Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {progressItems.map((item, i) => (
+            <div key={i}>
+              <div className="flex justify-between text-sm mb-1">
+                <span>{item.label}</span>
+                <span>{item.value}%</span>
               </div>
-            ) : (
-              <p className="text-muted-foreground text-sm">
-                No rating provided
-              </p>
-            )}
+              <Progress value={item.value} />
+            </div>
+          ))}
 
-            {session.feedback && (
-              <p className="italic text-sm mt-3 bg-muted/50 p-3 rounded-md border">
-                “{session.feedback}”
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+          {/* Other Symptoms */}
+          <div className="mt-4 p-3 bg-muted rounded-md text-sm">
+            <p>
+              <strong>Sleep Consistency:</strong> {session.sleepConsistency}
+            </p>
+            <p>
+              <strong>Dizziness:</strong> {session.dizziness}
+            </p>
+            <p>
+              <strong>Nausea:</strong> {session.nausea}
+            </p>
+          </div>
 
-      {/* Actions */}
-      <div className="flex justify-end pt-4">
-        <Button className="px-6">Export Report</Button>
+          {/* Notes */}
+          {session.progressNote && (
+            <div className="mt-4 p-4 border rounded-md bg-muted">
+              <p className="italic">“{session.progressNote}”</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Rating */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Rating & Feedback</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {session.rating ? (
+            <>
+              <div className="flex items-center gap-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-5 w-5 ${
+                      i < session.rating
+                        ? "fill-yellow-400 text-yellow-400"
+                        : "text-muted-foreground"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <div className="mt-3 text-sm">
+                <p>
+                  <strong>Comfort Level:</strong> {session.comfortLevel}/5
+                </p>
+                <p>
+                  <strong>Clarity Level:</strong> {session.clarityLevel}/5
+                </p>
+              </div>
+
+              {session.ratingComment && (
+                <p className="mt-4 italic bg-muted/50 p-3 rounded-md">
+                  “{session.ratingComment}”
+                </p>
+              )}
+            </>
+          ) : (
+            <p className="text-muted-foreground text-sm">No rating available</p>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-end">
+        <Button>Export Report</Button>
       </div>
     </div>
   );
-};
-
-export default SessionDetailsPage;
+}
