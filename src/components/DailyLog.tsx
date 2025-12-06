@@ -8,7 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const moods = [
-  { emoji: "😄", label: "Great", value: 5 },
+  { emoji: "😄", label: "Great", value: 4 },
   { emoji: "😊", label: "Good", value: 4 },
   { emoji: "😐", label: "Okay", value: 3 },
   { emoji: "😟", label: "Low", value: 2 },
