@@ -25,7 +25,6 @@ const columns = [
 
 export default function AIAnalysisSearch() {
   const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
 
   // Dialog states
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -36,7 +35,6 @@ export default function AIAnalysisSearch() {
 
   // Form state
   const [form, setForm] = useState<any>({
-    analysisID: "",
     riskScore: "",
     sentimentScore: "",
     issue: "",
@@ -48,15 +46,12 @@ export default function AIAnalysisSearch() {
   // Fetch all analysis
   const fetchAnalysis = async () => {
     try {
-      setLoading(true);
       const res = await fetch(API_URL);
       const logs = await res.json();
       setData(logs);
     } catch (err) {
       toast.error("Failed to load analysis");
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {
@@ -83,10 +78,8 @@ export default function AIAnalysisSearch() {
         body: JSON.stringify(form),
       });
 
-      console.log("d2");
       if (!res.ok) throw new Error();
 
-      console.log("D1");
       toast.success("AI analysis added");
       setIsAddOpen(false);
       fetchAnalysis();

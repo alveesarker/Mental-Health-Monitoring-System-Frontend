@@ -1,205 +1,301 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  AlertCircleIcon,
-  AlertTriangle,
-  Clock,
-  AlertOctagon,
-  Eye,
-  MoreVertical,
-  Phone,
-  Trash2,
-} from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { DataTable } from "../components/DataTable";
 
-const alerts = [
-  {
-    id: "ALT001",
-    userId: "USR002",
-    userName: "Michael Chen",
-    timestamp: "2024-10-25 14:23",
-    issue: "Suicidal ideation detected in text",
-    riskLevel: "critical",
-    status: "pending",
-  },
-  {
-    id: "ALT002",
-    userId: "USR015",
-    userName: "Jessica Taylor",
-    timestamp: "2024-10-25 13:45",
-    issue: "Severe stress spike detected",
-    riskLevel: "high",
-    status: "contacted",
-  },
-  {
-    id: "ALT003",
-    userId: "USR032",
-    userName: "David Kim",
-    timestamp: "2024-10-25 11:20",
-    issue: "Anxiety keywords repeated",
-    riskLevel: "medium",
-    status: "resolved",
-  },
-];
+const API_URL = "http://localhost:5000/crisisalerts";
 
-const getRiskColor = (level: string) => {
-  switch (level) {
-    case "critical":
-    case "high":
-      return "destructive";
-    case "medium":
-      return "default";
-    default:
-      return "secondary";
-  }
+// Empty form template
+const EMPTY_FORM = {
+  alertType: "",
+  alertLevel: "",
+  alertMessage: "",
+  timestamp: "",
+  status: "",
+  counsellorID: "",
+  patientID: "",
+  analysisID: "",
 };
 
 export default function Alerts() {
+  const [data, setData] = useState([]);
+  const [stats, setStats] = useState({ total: 0, pending: 0, resolved: 0 });
+
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [deleteItem, setDeleteItem] = useState(null);
+
+  // Load alerts
+  const fetchAlerts = async () => {
+    try {
+      const res = await fetch(API_URL);
+      const items = await res.json();
+      setData(items);
+
+      const pending = items.filter((i) => i.status === "Open").length;
+      const resolved = items.filter((i) => i.status === "Closed").length;
+
+      setStats({ total: items.length, pending, resolved });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchAlerts();
+  }, []);
+
+  // Add alert
+  const handleAddSubmit = async () => {
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error();
+
+      setIsAddOpen(false);
+      setForm(EMPTY_FORM);
+      fetchAlerts();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Edit alert
+  const handleEditSubmit = async () => {
+    try {
+      const res = await fetch(`${API_URL}/${selectedItem.alertID}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error();
+
+      setIsEditOpen(false);
+      setSelectedItem(null);
+      fetchAlerts();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Delete alert
+  const confirmDelete = async () => {
+    try {
+      const res = await fetch(`${API_URL}/${deleteItem.alertID}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error();
+
+      setIsDeleteOpen(false);
+      setDeleteItem(null);
+      fetchAlerts();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Crisis Detection & Alerts
-        </h1>
-        <p className="text-muted-foreground">
-          Monitor and respond to critical mental health situations
-        </p>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+    <>
+      {/* Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-3 mb-6">
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Critical Alerts
+              Total Alerts
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-destructive">3</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Require immediate action
-            </p>
+            <div className="text-3xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground mt-1">All recorded alerts</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Pending Review
+              Pending
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-yellow-500">7</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Awaiting counsellor response
-            </p>
+            <div className="text-3xl font-bold text-yellow-500">{stats.pending}</div>
+            <p className="text-xs text-muted-foreground mt-1">Awaiting review</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Resolved Today
+              Resolved
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">12</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Successfully handled
-            </p>
+            <div className="text-3xl font-bold text-green-600">{stats.resolved}</div>
+            <p className="text-xs text-muted-foreground mt-1">Handled successfully</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Alerts Table */}
-      <div className="rounded-xl border bg-card p-4 shadow-sm">
-        <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-destructive" />
-          Active Alerts
-        </h2>
+      {/* Data Table */}
+      <DataTable
+        title="Crisis Alerts"
+        columns={[
+          { key: "alertID", label: "Alert ID" },
+          { key: "alertType", label: "Type" },
+          { key: "alertLevel", label: "Level" },
+          { key: "alertMessage", label: "Message" },
+          { key: "timestamp", label: "Timestamp" },
+          { key: "status", label: "Status" },
+          { key: "counsellorID", label: "Counsellor ID" },
+          { key: "patientID", label: "Patient ID" },
+          { key: "analysisID", label: "Analysis ID" },
+        ]}
+        data={data}
+        onAdd={() => {
+          setForm(EMPTY_FORM);
+          setIsAddOpen(true);
+        }}
+        onEdit={(item) => {
+          setSelectedItem(item);
+          setForm({ ...item });
+          setIsEditOpen(true);
+        }}
+        onDelete={(item) => {
+          setDeleteItem(item);
+          setIsDeleteOpen(true);
+        }}
+        searchPlaceholder="Search alerts..."
+      />
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Issue</TableHead>
-              <TableHead>User</TableHead>
-              <TableHead>Risk Level</TableHead>
-              <TableHead>Timestamp</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
+      {/* Add Dialog */}
+      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Crisis Alert</DialogTitle>
+          </DialogHeader>
 
-          <TableBody>
-            {alerts.map((alert) => (
-              <TableRow key={alert.id}>
-                <TableCell className="font-medium ">
-                  <AlertTriangle className="h-4 w-4 text-destructive inline-block mr-1 mb-[5px]" />
-                  {alert.issue}
-                </TableCell>
+          <div className="space-y-3">
+            {Object.keys(form)
+              .filter((key) => key !== "alertID")
+              .map((key) => (
+                <div key={key} className="space-y-1">
+                  <label className="text-sm font-medium capitalize">{key}</label>
 
-                <TableCell>{alert.userName}</TableCell>
+                  {key === "timestamp" ? (
+                    <input
+                      type="datetime-local"
+                      className="border p-2 w-full rounded"
+                      value={form.timestamp ? form.timestamp.slice(0, 16) : ""}
+                      onChange={(e) =>
+                        setForm({ ...form, timestamp: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      className="border p-2 w-full rounded"
+                      value={form[key]}
+                      onChange={(e) =>
+                        setForm({ ...form, [key]: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+              ))}
+          </div>
 
-                <TableCell>
-                  <Badge variant={getRiskColor(alert.riskLevel)}>
-                    {alert.riskLevel}
-                  </Badge>
-                </TableCell>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddSubmit}>Add</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-                <TableCell className="text-muted-foreground">
-                  <Clock className="h-4 w-4 inline-block mr-1 mb-[5px]" />
-                  {alert.timestamp}
-                </TableCell>
+      {/* Edit Dialog */}
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Alert</DialogTitle>
+          </DialogHeader>
 
-                <TableCell>
-                  <Badge variant="outline" className="capitalize">
-                    {alert.status}
-                  </Badge>
-                </TableCell>
+          <div className="space-y-3">
+            {Object.keys(form)
+              .filter((key) => key !== "alertID")
+              .map((key) => (
+                <div key={key} className="space-y-1">
+                  <label className="text-sm font-medium capitalize">{key}</label>
 
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-40">
-                      <DropdownMenuItem>
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Phone className="h-4 w-4 mr-2" />
-                        Contact
-                      </DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">
-                        <AlertOctagon className="h-4 w-4 mr-2" />
-                        Send Alert
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+                  {key === "timestamp" ? (
+                    <input
+                      type="datetime-local"
+                      className="border p-2 w-full rounded"
+                      value={form.timestamp ? form.timestamp.slice(0, 16) : ""}
+                      onChange={(e) =>
+                        setForm({ ...form, timestamp: e.target.value })
+                      }
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      className="border p-2 w-full rounded"
+                      value={form[key]}
+                      onChange={(e) =>
+                        setForm({ ...form, [key]: e.target.value })
+                      }
+                    />
+                  )}
+                </div>
+              ))}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEditSubmit}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Dialog */}
+      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+          </DialogHeader>
+
+          <p className="my-4">
+            Delete alert ID: <strong>{deleteItem?.alertID}</strong>?
+          </p>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

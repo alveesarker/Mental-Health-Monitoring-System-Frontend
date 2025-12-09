@@ -21,8 +21,8 @@ import SessionPage from "./pages/SessionPage";
 import { AppSidebar } from "./components/admin/AppSidebar";
 import { DashboardHeader } from "./components/admin/DashboardHeader";
 import { SidebarProvider } from "./components/ui/sidebar";
+import ADailyLog from "./pages/ADailyLog";
 import AdminDailyLogsDetails from "./pages/AdminDailyLogsDetails";
-import AIAnalysisDetail from "./pages/AIAnalysisDetail";
 import AIAnalysisSearch from "./pages/AIAnalysisSearch";
 import Alerts from "./pages/Alerts";
 import Counsellors from "./pages/Counsellors";
@@ -30,7 +30,6 @@ import Dashboard from "./pages/Dashboard";
 import SessionDetailsPage from "./pages/SessionDetailsPage";
 import SessionManagement from "./pages/SessionManagement";
 import Users from "./pages/Users";
-import ADailyLog from "./pages/ADailyLog";
 
 // Counsellor Components
 import CounsellorDashBoard from "../src/pages/counsellor/Dashboard";
@@ -42,11 +41,11 @@ import DailyLogs from "./pages/counsellor/DailyLogs";
 // Auth
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import ARecommendation from "./pages/ARecommendation";
 import CounsellorSession from "./pages/counsellor/CounsellorSession";
 import CounsellorSessionDetails from "./pages/counsellor/CounsellorSessionDetails";
 import DailyLogsUsers from "./pages/counsellor/DailyLogsUsers";
 import Recommendations from "./pages/counsellor/Recommendations";
-import ARecommendation from "./pages/ARecommendation";
 
 const queryClient = new QueryClient();
 
@@ -93,14 +92,7 @@ const App = () => (
                               path="/ai-analysis"
                               element={<AIAnalysisSearch />}
                             />
-                            <Route
-                              path="/ai-analysis/:userId"
-                              element={<AIAnalysisDetail />}
-                            />
-                            <Route
-                              path="/daily-logs"
-                              element={<ADailyLog />}
-                            />
+                            <Route path="/daily-logs" element={<ADailyLog />} />
                             <Route
                               path="/daily-logs/:userId"
                               element={<AdminDailyLogsDetails />}
