@@ -11,11 +11,13 @@ const SessionManagement = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Fetch sessions from API
+  // in SessionManagement.tsx (or .jsx)
   const fetchSessions = async () => {
     try {
       const res = await fetch("http://localhost:5000/sessions");
       const data = await res.json();
-      // map API fields if needed
+      
+
       const mappedData: Session[] = data.map((s) => ({
         sessionID: s.sessionID,
         sessionDate: s.sessionDate,
@@ -26,11 +28,13 @@ const SessionManagement = () => {
         sessionType: s.sessionType,
         sessionTime: s.sessionTime,
         cname: s.cname,
-        pname: s.pname, // adjust based on your API
-        link: s.link,
-        counsellingCenter: s.counsellingCenter,
-        roomNumber: s.roomNumber,
+        pname: s.pname,
+        link: s.link || null,
+        counsellingCenter: s.counsellingCenter || null,
+        roomNumber: s.roomNumber || null,
       }));
+
+      console.log(mappedData)
       setSessions(mappedData);
       setFilteredSessions(mappedData);
     } catch (err) {

@@ -32,7 +32,7 @@ export interface Session {
   duration: string;
   patientID: string;
   counsellorID: string;
-  sessionType: "online" | "offline";
+  sessionType: string;
   sessionTime: string;
   pname?: string; // patient name
   cname?: string;
@@ -45,9 +45,7 @@ export const SessionsTable = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editData, setEditData] = useState<{
-    sessionType: "online" | "offline";
-  }>({ sessionType: "online" });
+  const [editData, setEditData] = useState("Online");
 
   const navigate = useNavigate();
 
@@ -57,10 +55,9 @@ export const SessionsTable = () => {
     fetchSessions();
   };
 
-  const handleEdit = async (session: Session) => {
-    // <-- use .counsellors
+  const handleEdit = (session: Session) => {
     setSelectedSession(session);
-    setEditData({ sessionType: session.sessionType });
+    setEditData(session.sessionType.toLowerCase()); // FIX
     setIsEditOpen(true);
   };
 
@@ -113,7 +110,7 @@ export const SessionsTable = () => {
         duration: s.duration,
         patientID: s.patientID,
         counsellorID: s.counsellorID,
-        sessionType: s.sessionType,
+        sessionType: s.sessionType.toLowerCase(),
         sessionTime: s.sessionTime,
         cname: s.cname,
         pname: s.pname, // adjust based on your API
@@ -237,6 +234,7 @@ export const SessionsTable = () => {
           <DialogHeader>
             <DialogTitle>Edit Session</DialogTitle>
           </DialogHeader>
+
           {selectedSession && (
             <form onSubmit={handleEditSubmit} className="space-y-4">
               {/* Patient */}
@@ -257,7 +255,7 @@ export const SessionsTable = () => {
                 <input
                   type="date"
                   name="sessionDate"
-                  defaultValue={selectedSession.sessionDate.split("T")[0]} // Format for date input
+                  defaultValue={selectedSession.sessionDate.split("T")[0]}
                   className="w-full border p-2 rounded"
                   required
                 />
@@ -304,17 +302,13 @@ export const SessionsTable = () => {
                 </select>
               </div>
 
-              {/* Session Type */}
+              {/* FIXED SESSION TYPE */}
               <div>
                 <label className="text-sm font-medium">Session Type</label>
                 <select
                   name="sessionType"
-                  value={editData.sessionType}
-                  onChange={(e) =>
-                    setEditData({
-                      sessionType: e.target.value as "online" | "offline",
-                    })
-                  }
+                  value={editData}
+                  onChange={(e) => setEditData(e.target.value)}
                   className="w-full border p-2 rounded"
                 >
                   <option value="online">Online</option>
@@ -322,7 +316,8 @@ export const SessionsTable = () => {
                 </select>
               </div>
 
-              {editData.sessionType === "online" ? (
+              {/* CONDITIONAL FIELDS */}
+              {editData === "online" ? (
                 <div>
                   <label className="text-sm font-medium">Link</label>
                   <input

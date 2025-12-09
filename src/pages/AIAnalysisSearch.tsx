@@ -1,168 +1,312 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Brain, Search } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { DataTable } from "../components/DataTable";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+const API_URL = "http://localhost:5000/analysis";
 
-const mockUsers: User[] = [
-  { id: "USR001", name: "Alice Johnson", email: "alice.johnson@example.com" },
-  { id: "USR002", name: "Bob Smith", email: "bob.smith@example.com" },
-  { id: "USR003", name: "Carol White", email: "carol.white@example.com" },
-  { id: "USR004", name: "David Brown", email: "david.brown@example.com" },
-  { id: "USR005", name: "Emma Davis", email: "emma.davis@example.com" },
-  { id: "USR006", name: "Frank Miller", email: "frank.miller@example.com" },
-  { id: "USR007", name: "Grace Wilson", email: "grace.wilson@example.com" },
-  { id: "USR008", name: "Henry Taylor", email: "henry.taylor@example.com" },
+// Column definitions
+const columns = [
+  { key: "analysisID", label: "Analysis ID" },
+  { key: "riskScore", label: "Risk Score" },
+  { key: "sentimentScore", label: "Sentiment Score" },
+  { key: "issue", label: "Issue" },
+  { key: "emotionalClassification", label: "Emotion" },
 ];
 
-const AIAnalysisSearch = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(mockUsers);
-  const navigate = useNavigate();
+export default function AIAnalysisSearch() {
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleSearch = () => {
-    if (!searchTerm.trim()) {
-      setFilteredUsers(mockUsers);
-      return;
+  // Dialog states
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteItem, setDeleteItem] = useState<any>(null);
+
+  // Form state
+  const [form, setForm] = useState<any>({
+    analysisID: "",
+    riskScore: "",
+    sentimentScore: "",
+    issue: "",
+    emotionalClassification: "",
+  });
+
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+
+  // Fetch all analysis
+  const fetchAnalysis = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(API_URL);
+      const logs = await res.json();
+      setData(logs);
+    } catch (err) {
+      toast.error("Failed to load analysis");
+    } finally {
+      setLoading(false);
     }
-
-    const filtered = mockUsers.filter(
-      (user) =>
-        user.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredUsers(filtered);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearch();
+  useEffect(() => {
+    fetchAnalysis();
+  }, []);
+
+  // Add button
+  const handleAdd = () => {
+    setForm({
+      riskScore: "",
+      sentimentScore: "",
+      issue: "",
+      emotionalClassification: "",
+    });
+    setIsAddOpen(true);
+  };
+
+  // Submit add
+  const handleAddSubmit = async () => {
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      console.log("d2");
+      if (!res.ok) throw new Error();
+
+      console.log("D1");
+      toast.success("AI analysis added");
+      setIsAddOpen(false);
+      fetchAnalysis();
+    } catch (e) {
+      console.error("Fetch error:", e);
+      toast.error("Failed to add record");
+    }
+  };
+
+  // Edit item
+  const handleEdit = (item: any) => {
+    setSelectedItem(item);
+    setForm({
+      analysisID: item.analysisID,
+      riskScore: item.riskScore,
+      sentimentScore: item.sentimentScore,
+      issue: item.issue,
+      emotionalClassification: item.emotionalClassification,
+    });
+    setIsEditOpen(true);
+  };
+
+  // Submit edit
+  const handleEditSubmit = async () => {
+    try {
+      const url = `${API_URL}/${selectedItem.analysisID}`;
+
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error();
+
+      toast.success("AI analysis updated");
+      setIsEditOpen(false);
+      fetchAnalysis();
+    } catch {
+      toast.error("Update failed");
+    }
+  };
+
+  // Delete
+  const handleDelete = (item: any) => {
+    setDeleteItem(item);
+    setIsDeleteOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteItem) return;
+
+    try {
+      const res = await fetch(`${API_URL}/${deleteItem.analysisID}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Delete failed");
+
+      toast.success("Deleted successfully");
+      fetchAnalysis();
+    } catch (e) {
+      console.error(e);
+      toast.error("Delete failed");
+    } finally {
+      setIsDeleteOpen(false);
+      setDeleteItem(null);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-              <Brain className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                AI Analysis Management
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Search and manage user AI analysis data
-              </p>
-            </div>
+    <>
+      <DataTable
+        title="AI Analysis"
+        columns={columns}
+        data={data}
+        onAdd={handleAdd}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        searchPlaceholder="Search by issue or emotion..."
+      />
+
+      {/* ----------------- ADD DIALOG ----------------- */}
+      <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add AI Analysis</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            <input
+              type="number"
+              min={0}
+              max={100}
+              className="border p-2 w-full rounded"
+              placeholder="Risk Score (0–100)"
+              value={form.riskScore}
+              onChange={(e) => setForm({ ...form, riskScore: e.target.value })}
+            />
+
+            <input
+              className="border p-2 w-full rounded"
+              placeholder="Sentiment Score"
+              value={form.sentimentScore}
+              onChange={(e) =>
+                setForm({ ...form, sentimentScore: e.target.value })
+              }
+            />
+
+            <input
+              className="border p-2 w-full rounded"
+              placeholder="Issue"
+              value={form.issue}
+              onChange={(e) => setForm({ ...form, issue: e.target.value })}
+            />
+
+            <input
+              className="border p-2 w-full rounded"
+              placeholder="Emotional Classification"
+              value={form.emotionalClassification}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  emotionalClassification: e.target.value,
+                })
+              }
+            />
           </div>
-        </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>User Search</CardTitle>
-            <CardDescription>
-              Enter a User ID or Name to find their AI analysis data
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {/* Search Section */}
-            <div className="mb-6 flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="Enter User ID or Name"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="pl-9"
-                />
-              </div>
-              <Button onClick={handleSearch}>Search</Button>
-            </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddSubmit}>Add</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-            {/* Results Table */}
-            <div className="rounded-md border border-border">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50">
-                    <TableHead className="font-semibold">User ID</TableHead>
-                    <TableHead className="font-semibold">Name</TableHead>
-                    <TableHead className="font-semibold">Email</TableHead>
-                    <TableHead className="text-right font-semibold">
-                      Action
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.length === 0 ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={4}
-                        className="text-center text-muted-foreground"
-                      >
-                        No users found matching your search
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredUsers.map((user) => (
-                      <TableRow
-                        key={user.id}
-                        className="hover:bg-muted/30 transition-colors"
-                      >
-                        <TableCell className="font-medium">{user.id}</TableCell>
-                        <TableCell>{user.name}</TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {user.email}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="default"
-                            size="sm"
-                            onClick={() =>
-                              navigate(`/admin/ai-analysis/${user.id}`)
-                            }
-                          >
-                            View AI Data
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+      {/* ----------------- EDIT DIALOG ----------------- */}
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit AI Analysis</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-3">
+            <p className="text-sm opacity-70">
+              Editing: {selectedItem?.analysisID}
+            </p>
+
+            <input
+              type="number"
+              min={0}
+              max={100}
+              className="border p-2 w-full rounded"
+              placeholder="Risk Score (0–100)"
+              value={form.riskScore}
+              onChange={(e) => setForm({ ...form, riskScore: e.target.value })}
+            />
+
+            <input
+              className="border p-2 w-full rounded"
+              placeholder="Sentiment Score"
+              value={form.sentimentScore}
+              onChange={(e) =>
+                setForm({ ...form, sentimentScore: e.target.value })
+              }
+            />
+
+            <input
+              className="border p-2 w-full rounded"
+              placeholder="Issue"
+              value={form.issue}
+              onChange={(e) => setForm({ ...form, issue: e.target.value })}
+            />
+
+            <input
+              className="border p-2 w-full rounded"
+              placeholder="Emotional Classification"
+              value={form.emotionalClassification}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  emotionalClassification: e.target.value,
+                })
+              }
+            />
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEditSubmit}>Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ----------------- DELETE CONFIRM DIALOG ----------------- */}
+      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+          </DialogHeader>
+
+          <p className="my-4">
+            Are you sure you want to delete analysis ID:{" "}
+            {deleteItem?.analysisID}?
+          </p>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
-};
-
-export default AIAnalysisSearch;
+}

@@ -5,7 +5,6 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { formatToISODate } from "../lib/dateFormater";
 
 export default function SessionDetailsPage() {
   const { id } = useParams();
@@ -19,6 +18,7 @@ export default function SessionDetailsPage() {
       );
       const data = await res.json();
       setSession(data);
+      console.log(data);
     };
     load();
   }, [id]);
@@ -42,8 +42,15 @@ export default function SessionDetailsPage() {
   ];
 
   function to12Hour(time24) {
-    const [hour, minute] = time24.split(":");
-    return new Date(0, 0, 0, hour, minute).toLocaleTimeString("en-US", {
+    if (!time24) return "-";
+    // Accept "HH:MM:SS" or "HH:MM"
+    const parts = time24.split(":");
+    if (parts.length < 2) return time24;
+    const hour = parseInt(parts[0], 10);
+    const minute = parseInt(parts[1], 10);
+    const date = new Date();
+    date.setHours(hour, minute, 0, 0);
+    return date.toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
@@ -51,8 +58,11 @@ export default function SessionDetailsPage() {
   }
 
   const formatDateTime = (dateTime: string) => {
+    if (!dateTime) return "-";
+    // if dateTime is a plain date string like "2025-12-06", Date will parse OK
     const date = new Date(dateTime);
-    return date.toLocaleString("en-US", {
+    if (isNaN(date.getTime())) return dateTime;
+    return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
@@ -88,7 +98,8 @@ export default function SessionDetailsPage() {
             <strong>Counsellor:</strong> {session.counsellorName}
           </p>
           <p>
-            <strong>Type:</strong> {session.sessionType}
+            <strong>Type:</strong>{" "}
+            {session.sessionType || (session.link ? "Online" : "Offline")}
           </p>
           <p>
             <strong>Duration:</strong> {session.duration} min
