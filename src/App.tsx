@@ -1,225 +1,53 @@
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import NotFound from "./pages/NotFound";
-
-// Patient Components
-import CounsellorDirectory from "./components/CounsellorDirectory";
-import { Header } from "./components/Header";
-import AiMood from "./pages/AiMood";
-import Crisis from "./pages/Crisis";
-import EmergencySupport from "./pages/EmergencySupportPage";
-import Feedback from "./pages/Feedback";
-import Index from "./pages/Index";
-import LoginPage from "./pages/LoginPage";
-import RecommendationPage from "./pages/recommendationPage";
-import SessionPage from "./pages/SessionPage";
-
-// Admin Components
-import { AppSidebar } from "./components/admin/AppSidebar";
-import { DashboardHeader } from "./components/admin/DashboardHeader";
-import { SidebarProvider } from "./components/ui/sidebar";
-import ADailyLog from "./pages/ADailyLog";
-import AdminDailyLogsDetails from "./pages/AdminDailyLogsDetails";
-import AIAnalysisSearch from "./pages/AIAnalysisSearch";
-import Alerts from "./pages/Alerts";
-import Counsellors from "./pages/Counsellors";
-import Dashboard from "./pages/Dashboard";
-import SessionDetailsPage from "./pages/SessionDetailsPage";
-import SessionManagement from "./pages/SessionManagement";
-import Users from "./pages/Users";
-
-// Counsellor Components
-import CounsellorDashBoard from "../src/pages/counsellor/Dashboard";
-import CounsellorUsers from "../src/pages/counsellor/Users";
-import { DashboardLayout } from "./components/counsellor/DashboardLayout";
-import AIAnalysis from "./pages/counsellor/AIAnalysis";
-import DailyLogs from "./pages/counsellor/DailyLogs";
-
-// Auth
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext";
-import ARecommendation from "./pages/ARecommendation";
-import CounsellorSession from "./pages/counsellor/CounsellorSession";
-import CounsellorSessionDetails from "./pages/counsellor/CounsellorSessionDetails";
-import DailyLogsUsers from "./pages/counsellor/DailyLogsUsers";
-import Recommendations from "./pages/counsellor/Recommendations";
+import { Toaster } from "./components/ui/sonner";
+// import your Toaster
+import { TooltipProvider } from "@radix-ui/react-tooltip";
+import Login from "./pages/Login";
+import AdminRoutes from "./routes/AdminRoutes";
+import CounsellorRoutes from "./routes/CounsellorRoutes";
+import PatientRoutes from "./routes/PatientRoutes";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
+function App() {
+  return (
+    <BrowserRouter>
+      {/* Mount Toaster once at the top level */}
       <TooltipProvider>
         <Toaster />
-        <Sonner />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          {/* <Route path="/signup" element={<Signup />} /> */}
 
-        <BrowserRouter>
-          <Routes>
-            {/* -------- PUBLIC ROUTE -------- */}
-            <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminRoutes />
+              </ProtectedRoute>
+            }
+          />
 
-            {/* -------- ADMIN ROUTES -------- */}
-            <Route
-              path="/admin/*"
-              element={
-                <ProtectedRoute allowed={["admin"]}>
-                  <SidebarProvider>
-                    <div className="flex min-h-screen w-full">
-                      <AppSidebar />
-                      <div className="flex flex-1 flex-col">
-                        <DashboardHeader />
-                        <main className="flex-1 p-6 bg-background">
-                          <Routes>
-                            <Route path="/" element={<Dashboard />} />
-                            <Route path="/users" element={<Users />} />
-                            <Route
-                              path="/counsellors"
-                              element={<Counsellors />}
-                            />
-                            <Route path="/alerts" element={<Alerts />} />
-                            <Route
-                              path="/sessions"
-                              element={<SessionManagement />}
-                            />
-                            <Route
-                              path="/sessions/:id"
-                              element={<SessionDetailsPage />}
-                            />
-                            <Route
-                              path="/ai-analysis"
-                              element={<AIAnalysisSearch />}
-                            />
-                            <Route path="/daily-logs" element={<ADailyLog />} />
-                            <Route
-                              path="/daily-logs/:userId"
-                              element={<AdminDailyLogsDetails />}
-                            />
-                            <Route
-                              path="/recommendation"
-                              element={<ARecommendation />}
-                            />
-                            <Route path="*" element={<NotFound />} />
-                          </Routes>
-                        </main>
-                      </div>
-                    </div>
-                  </SidebarProvider>
-                </ProtectedRoute>
-              }
-            />
+          <Route
+            path="/counsellor/*"
+            element={
+              <ProtectedRoute role="counsellor">
+                <CounsellorRoutes />
+              </ProtectedRoute>
+            }
+          />
 
-            {/* -------- COUNSELLOR ROUTES -------- */}
-            <Route
-              path="/counsellor/*"
-              element={
-                <ProtectedRoute allowed={["counsellor"]}>
-                  <Routes>
-                    <Route
-                      path="/"
-                      element={
-                        <DashboardLayout>
-                          <CounsellorDashBoard />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/users"
-                      element={
-                        <DashboardLayout>
-                          <CounsellorUsers />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/session"
-                      element={
-                        <DashboardLayout>
-                          <CounsellorSession />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/sessions/:id"
-                      element={
-                        <DashboardLayout>
-                          <CounsellorSessionDetails />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/daily-logs"
-                      element={
-                        <DashboardLayout>
-                          <DailyLogsUsers />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/daily-logs/:id"
-                      element={
-                        <DashboardLayout>
-                          <DailyLogs />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/ai-analysis"
-                      element={
-                        <DashboardLayout>
-                          <AIAnalysis />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route
-                      path="/recommendations"
-                      element={
-                        <DashboardLayout>
-                          <Recommendations />
-                        </DashboardLayout>
-                      }
-                    />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* -------- PATIENT ROUTES -------- */}
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute allowed={["patient"]}>
-                  <>
-                    <Header />
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route
-                        path="/recommendation"
-                        element={<RecommendationPage />}
-                      />
-                      <Route path="/session" element={<SessionPage />} />
-                      <Route
-                        path="/session/book"
-                        element={<CounsellorDirectory />}
-                      />
-                      <Route path="/feedback" element={<Feedback />} />
-                      <Route path="/moodanalysis" element={<AiMood />} />
-                      <Route path="/emergency" element={<EmergencySupport />} />
-                      <Route path="/crisis" element={<Crisis />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute role="patient">
+                <PatientRoutes />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+    </BrowserRouter>
+  );
+}
 
 export default App;

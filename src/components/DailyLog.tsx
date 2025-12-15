@@ -8,7 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const moods = [
-  { emoji: "😄", label: "Great", value: 4 },
+  { emoji: "😄", label: "Great", value: 5 },
   { emoji: "😊", label: "Good", value: 4 },
   { emoji: "😐", label: "Okay", value: 3 },
   { emoji: "😟", label: "Low", value: 2 },
@@ -20,25 +20,7 @@ const DailyLog = () => {
   const [stressLevel, setStressLevel] = useState([5]);
   const [sleepDuration, setSleepDuration] = useState("");
   const [notes, setNotes] = useState("");
-
-  const handleSubmit = () => {
-    if (selectedMood === null) {
-      toast.error("Please select your mood");
-      return;
-    }
-    if (!sleepDuration) {
-      toast.error("Please enter sleep duration");
-      return;
-    }
-
-    toast.success("Daily log saved successfully!");
-
-    // Reset form
-    setSelectedMood(null);
-    setStressLevel([5]);
-    setSleepDuration("");
-    setNotes("");
-  };
+  const [loading, setLoading] = useState(false);
 
   const getStressColor = (level: number) => {
     if (level <= 3) return "text-secondary";
@@ -50,6 +32,83 @@ const DailyLog = () => {
     if (level <= 3) return "Low";
     if (level <= 6) return "Moderate";
     return "High";
+  };
+
+  const handleSubmit = async () => {
+    console.log("null");
+    if (selectedMood === null) {
+      toast.error("Please select your mood", {
+        style: {
+          background: "#ef4444", // red-500
+          color: "white",
+        },
+      });
+      return;
+    }
+    if (!sleepDuration) {
+      toast.error("Please enter sleep duration", {
+        style: {
+          background: "#ef4444", // red-500
+          color: "white",
+        },
+      });
+      return;
+    }
+
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (!user?.userID) {
+      toast.error("User not found. Please login again.", {
+        style: {
+          background: "#ef4444", // red-500
+          color: "white",
+        },
+      });
+      return;
+    }
+
+    // Get mood label instead of numeric value
+    const moodLabel = moods.find((m) => m.value === selectedMood)?.label;
+
+    const data = {
+      patientID: user.userID,
+      timestamp: new Date().toISOString(),
+      mood: moodLabel, // send as text
+      notes,
+      stressLevel: stressLevel[0],
+      sleepDuration,
+    };
+    console.log(data);
+
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:5000/daily-logs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || "Failed to save daily log");
+      }
+
+      toast.success("Daily log saved successfully!", {
+        style: {
+          background: "#5CE65C", // red-500
+          color: "white",
+        },
+      });
+
+      // Reset form
+      setSelectedMood(null);
+      setStressLevel([5]);
+      setSleepDuration("");
+      setNotes("");
+    } catch (err) {
+      toast.error(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -145,9 +204,10 @@ const DailyLog = () => {
         {/* Submit Button */}
         <Button
           onClick={handleSubmit}
+          disabled={loading}
           className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg"
         >
-          Save Daily Log
+          {loading ? "Saving..." : "Save Daily Log"}
         </Button>
       </div>
     </Card>

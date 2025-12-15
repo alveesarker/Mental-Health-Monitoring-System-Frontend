@@ -1,18 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Navigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
 
-const ProtectedRoute = ({
-  children,
-  allowed,
-}: {
-  children: React.ReactNode;
-  allowed: string[];
-}) => {
-  const { role } = useAuth();
+const ProtectedRoute = ({ children, role }: any) => {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  if (!role || !allowed.includes(role)) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" />;
+
+  if (role && user.role !== role) return <Navigate to="/login" />;
 
   return children;
 };

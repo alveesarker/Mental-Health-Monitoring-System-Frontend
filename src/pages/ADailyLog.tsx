@@ -14,6 +14,10 @@ import { DataTable } from "../components/DataTable";
 
 const API_URL = "http://localhost:5000/daily-logs";
 
+// Dropdown options
+const moodOptions = ["Great", "Good", "Okay", "Low", "Difficult"];
+const stressOptions = Array.from({ length: 10 }, (_, i) => i + 1);
+
 // Column definitions
 const columns = [
   { key: "patientID", label: "Patient ID" },
@@ -28,11 +32,9 @@ export default function DailyLogs() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Dialog states
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
-  // Form state
   const [form, setForm] = useState<any>({
     patientID: "",
     timestamp: "",
@@ -44,14 +46,14 @@ export default function DailyLogs() {
 
   const [selectedLog, setSelectedLog] = useState<any>(null);
 
-  // 🔹 Load all logs from API
+  // Load logs
   const fetchDailyLogs = async () => {
     try {
       setLoading(true);
       const res = await fetch(API_URL);
       const logs = await res.json();
       setData(logs);
-    } catch (err) {
+    } catch {
       toast.error("Failed to load logs");
     } finally {
       setLoading(false);
@@ -62,7 +64,7 @@ export default function DailyLogs() {
     fetchDailyLogs();
   }, []);
 
-  // 🔹 Handle "Add" button
+  // Add
   const handleAdd = () => {
     setForm({
       patientID: "",
@@ -75,13 +77,15 @@ export default function DailyLogs() {
     setIsAddOpen(true);
   };
 
-  // 🔹 Handle add submit
   const handleAddSubmit = async () => {
     try {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          stressLevel: Number(form.stressLevel),
+        }),
       });
 
       if (!res.ok) throw new Error();
@@ -94,7 +98,7 @@ export default function DailyLogs() {
     }
   };
 
-  // 🔹 Handle edit action
+  // Edit
   const handleEdit = (item: any) => {
     setSelectedLog(item);
     setForm({
@@ -108,7 +112,6 @@ export default function DailyLogs() {
     setIsEditOpen(true);
   };
 
-  // 🔹 Submit edit API
   const handleEditSubmit = async () => {
     try {
       const url = `${API_URL}/${selectedLog.patientID}/${selectedLog.timestamp}`;
@@ -116,7 +119,10 @@ export default function DailyLogs() {
       const res = await fetch(url, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          stressLevel: Number(form.stressLevel),
+        }),
       });
 
       if (!res.ok) throw new Error();
@@ -129,7 +135,7 @@ export default function DailyLogs() {
     }
   };
 
-  // 🔹 Handle delete
+  // Delete
   const handleDelete = async (item: any) => {
     if (!confirm("Delete this log?")) return;
 
@@ -145,26 +151,6 @@ export default function DailyLogs() {
     }
   };
 
-  function formatDateTime(isoString: string) {
-  if (!isoString) return "";
-  const date = new Date(isoString);
-
-  const formattedDate = date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-
-  const formattedTime = date.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-
-  return `${formattedDate} ${formattedTime}`;
-}
-
-
   return (
     <>
       <DataTable
@@ -177,7 +163,7 @@ export default function DailyLogs() {
         searchPlaceholder="Search by date, mood, or notes..."
       />
 
-      {/* ----------------- ADD DIALOG ----------------- */}
+      {/* -------- ADD DIALOG -------- */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
         <DialogContent>
           <DialogHeader>
@@ -189,28 +175,50 @@ export default function DailyLogs() {
               className="border p-2 w-full rounded"
               placeholder="Patient ID"
               value={form.patientID}
-              onChange={(e) => setForm({ ...form, patientID: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, patientID: e.target.value })
+              }
             />
+
             <input
               type="datetime-local"
               className="border p-2 w-full rounded"
               value={form.timestamp}
-              onChange={(e) => setForm({ ...form, timestamp: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, timestamp: e.target.value })
+              }
             />
-            <input
+
+            {/* Mood */}
+            <select
               className="border p-2 w-full rounded"
-              placeholder="Mood"
               value={form.mood}
               onChange={(e) => setForm({ ...form, mood: e.target.value })}
-            />
-            <input
+            >
+              <option value="">Select Mood</option>
+              {moodOptions.map((mood) => (
+                <option key={mood} value={mood}>
+                  {mood}
+                </option>
+              ))}
+            </select>
+
+            {/* Stress */}
+            <select
               className="border p-2 w-full rounded"
-              placeholder="Stress Level"
               value={form.stressLevel}
               onChange={(e) =>
                 setForm({ ...form, stressLevel: e.target.value })
               }
-            />
+            >
+              <option value="">Select Stress Level</option>
+              {stressOptions.map((level) => (
+                <option key={level} value={level}>
+                  {level}
+                </option>
+              ))}
+            </select>
+
             <input
               className="border p-2 w-full rounded"
               placeholder="Sleep Duration (hours)"
@@ -219,6 +227,7 @@ export default function DailyLogs() {
                 setForm({ ...form, sleepDuration: e.target.value })
               }
             />
+
             <textarea
               className="border p-2 w-full rounded"
               placeholder="Notes"
@@ -236,7 +245,7 @@ export default function DailyLogs() {
         </DialogContent>
       </Dialog>
 
-      {/* ----------------- EDIT DIALOG ----------------- */}
+      {/* -------- EDIT DIALOG -------- */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent>
           <DialogHeader>
@@ -248,20 +257,32 @@ export default function DailyLogs() {
               Editing entry for: {selectedLog?.timestamp}
             </p>
 
-            <input
+            <select
               className="border p-2 w-full rounded"
-              placeholder="Mood"
               value={form.mood}
               onChange={(e) => setForm({ ...form, mood: e.target.value })}
-            />
-            <input
+            >
+              {moodOptions.map((mood) => (
+                <option key={mood} value={mood}>
+                  {mood}
+                </option>
+              ))}
+            </select>
+
+            <select
               className="border p-2 w-full rounded"
-              placeholder="Stress Level"
               value={form.stressLevel}
               onChange={(e) =>
                 setForm({ ...form, stressLevel: e.target.value })
               }
-            />
+            >
+              {stressOptions.map((level) => (
+                <option key={level} value={level}>
+                  {level}
+                </option>
+              ))}
+            </select>
+
             <input
               className="border p-2 w-full rounded"
               placeholder="Sleep Duration (hours)"

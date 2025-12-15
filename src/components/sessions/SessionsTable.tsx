@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 export interface Session {
   sessionID: string;
   sessionDate: string;
-  status: "upcoming" | "ongoing" | "completed" | "cancelled";
+  status: "pending" | "requested" | "completed" | "cancelled";
   duration: string;
   patientID: string;
   counsellorID: string;
@@ -118,6 +118,7 @@ export const SessionsTable = () => {
         counsellingCenter: s.counsellingCenter,
         roomNumber: s.roomNumber,
       }));
+      console.log(mappedData);
       setSessions(mappedData);
     } catch (err) {
       console.error("Failed to fetch sessions:", err);
@@ -295,8 +296,8 @@ export const SessionsTable = () => {
                   defaultValue={selectedSession.status}
                   className="w-full border p-2 rounded"
                 >
-                  <option value="upcoming">Upcoming</option>
-                  <option value="ongoing">Ongoing</option>
+                  <option value="pending">Pending</option>
+                  <option value="requested">Requested</option>
                   <option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
                 </select>

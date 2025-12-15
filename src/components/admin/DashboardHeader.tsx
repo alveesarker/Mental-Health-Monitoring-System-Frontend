@@ -9,15 +9,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Bell, CheckCircle, Info, User, XCircle } from "lucide-react";
 import {
+  Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  Sheet,
 } from "@/components/ui/sheet"; // ✅ fixed import (your import path may vary)
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Bell, CheckCircle, Info, User, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type NotificationType = "success" | "error" | "info";
@@ -85,8 +85,10 @@ const typeConfig: Record<
 };
 
 export function DashboardHeader() {
-
-  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 backdrop-blur-sm px-6">
@@ -110,7 +112,8 @@ export function DashboardHeader() {
           <SheetContent side="right" className="w-[400px] sm:w-[480px] p-5">
             <SheetHeader>
               <SheetTitle className="text-2xl font-semibold">
-                Notifications<Bell className=" inline-block font-bold ml-2"/>
+                Notifications
+                <Bell className=" inline-block font-bold ml-2" />
               </SheetTitle>
             </SheetHeader>
 
@@ -159,7 +162,7 @@ export function DashboardHeader() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate("/login")}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

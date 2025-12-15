@@ -19,7 +19,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Bell, CheckCircle, Info, User, XCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 type NotificationType = "success" | "error" | "info";
 
@@ -90,7 +89,10 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
 
   return (
     <SidebarProvider>
@@ -171,9 +173,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate("/login")}>
-                    Logout
-                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

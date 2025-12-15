@@ -16,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import {
+  AlertTriangle,
   Bell,
   BookOpen,
   Calendar,
@@ -27,11 +28,9 @@ import {
   Sparkles,
   User,
   XCircle,
-  AlertTriangle
 } from "lucide-react";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import alveeImg from "../assets/images/alvee.jpg";
-import { useNavigate } from "react-router-dom";
 
 type NotificationType = "success" | "error" | "info";
 
@@ -153,16 +152,24 @@ export const Header = () => {
   const muted = "text-muted-foreground hover:text-foreground";
   const active = "text-primary"; // highlight color when active
 
+  const onOut = () => {
+    console.log(localStorage.user);
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <Link to={'/'}>
-              <span className="text-xl font-bold cursor-pointer text-foreground">
-                PSYTrack
-              </span>
+              <Link to={"/"}>
+                <span className="text-xl font-bold cursor-pointer text-foreground">
+                  PSYTrack
+                </span>
               </Link>
             </div>
 
@@ -307,10 +314,10 @@ export const Header = () => {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      MD Alvee Sarker
+                      {user.name}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      alveesarker196@gmail.com
+                      {user.email}
                     </p>
                   </div>
                 </DropdownMenuLabel>
@@ -320,7 +327,7 @@ export const Header = () => {
                   <span>Profile</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/login")}>
+                <DropdownMenuItem onClick={onOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
