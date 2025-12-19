@@ -14,6 +14,9 @@ import NotFound from "@/pages/NotFound";
 import SessionDetailsPage from "@/pages/SessionDetailsPage";
 import SessionManagement from "@/pages/SessionManagement";
 import Users from "@/pages/Users";
+import AdminProgressPage from "@/pages/AdminProgress";
+import AdminFeedbackPage from "@/pages/AdminFeedback";
+import QuestionsPage from "@/pages/Questions";
 
 const AdminRoutes = () => {
   return (
@@ -32,11 +35,10 @@ const AdminRoutes = () => {
               <Route path="/sessions/:id" element={<SessionDetailsPage />} />
               <Route path="/ai-analysis" element={<AIAnalysisSearch />} />
               <Route path="/daily-logs" element={<ADailyLog />} />
-              <Route
-                path="/daily-logs/:userId"
-                element={<AdminDailyLogsDetails />}
-              />
               <Route path="/recommendation" element={<ARecommendation />} />
+              <Route path="/progress" element={<AdminProgressPage />} />
+              <Route path="/feedback" element={<AdminFeedbackPage />} />
+              <Route path="/questions" element={<QuestionsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

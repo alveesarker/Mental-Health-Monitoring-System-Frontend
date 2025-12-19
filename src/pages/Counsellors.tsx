@@ -470,101 +470,121 @@ export default function Counsellors() {
               </Button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-4xl">
+            <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Counsellor</DialogTitle>
               </DialogHeader>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
-                {/* MAIN FIELDS */}
-                <div>
-                  <Label>Name</Label>
-                  <Input
-                    value={addMain.name}
-                    onChange={(e) =>
-                      setAddMain({ ...addMain, name: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Email</Label>
-                  <Input
-                    value={addMain.email}
-                    onChange={(e) =>
-                      setAddMain({ ...addMain, email: e.target.value })
-                    }
-                  />
-                </div>
+              <div className="space-y-6 py-2">
+                {/* BASIC INFO */}
+                <section>
+                  <h3 className="font-semibold mb-2">Basic Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Name</Label>
+                      <Input
+                        value={addMain.name}
+                        onChange={(e) =>
+                          setAddMain({ ...addMain, name: e.target.value })
+                        }
+                      />
+                    </div>
 
-                <div>
-                  <Label>Years of Experience</Label>
-                  <Input
-                    value={addMain.yearOfExperience}
-                    onChange={(e) =>
-                      setAddMain({
-                        ...addMain,
-                        yearOfExperience: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Contact Number</Label>
-                  <Input
-                    value={addMain.contactNumber}
-                    onChange={(e) =>
-                      setAddMain({ ...addMain, contactNumber: e.target.value })
-                    }
-                  />
-                </div>
+                    <div>
+                      <Label>Email</Label>
+                      <Input
+                        value={addMain.email}
+                        onChange={(e) =>
+                          setAddMain({ ...addMain, email: e.target.value })
+                        }
+                      />
+                    </div>
 
-                <div>
-                  <Label>Availability</Label>
-                  <select
-                    className="border rounded-md p-2 w-full"
-                    value={addMain.availability}
-                    onChange={(e) =>
-                      setAddMain({ ...addMain, availability: e.target.value })
-                    }
-                  >
-                    <option value="online">Online</option>
-                    <option value="offline">Offline</option>
-                  </select>
-                </div>
+                    <div>
+                      <Label>Contact Number</Label>
+                      <Input
+                        value={addMain.contactNumber}
+                        onChange={(e) =>
+                          setAddMain({
+                            ...addMain,
+                            contactNumber: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
 
-                <div />
-                <div>
-                  <Label>Street</Label>
-                  <Input
-                    value={addMain.street}
-                    onChange={(e) =>
-                      setAddMain({ ...addMain, street: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>City</Label>
-                  <Input
-                    value={addMain.city}
-                    onChange={(e) =>
-                      setAddMain({ ...addMain, city: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label>Postal Code</Label>
-                  <Input
-                    value={addMain.postalCode}
-                    onChange={(e) =>
-                      setAddMain({ ...addMain, postalCode: e.target.value })
-                    }
-                  />
-                </div>
+                    <div>
+                      <Label>Years of Experience</Label>
+                      <Input
+                        value={addMain.yearOfExperience}
+                        onChange={(e) =>
+                          setAddMain({
+                            ...addMain,
+                            yearOfExperience: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <Label>Availability</Label>
+                      <select
+                        className="border rounded-md p-2 w-full"
+                        value={addMain.availability}
+                        onChange={(e) =>
+                          setAddMain({
+                            ...addMain,
+                            availability: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="available">Available</option>
+                        <option value="not available">Not Available</option>
+                      </select>
+                    </div>
+                  </div>
+                </section>
+
+                {/* ADDRESS */}
+                <section>
+                  <h3 className="font-semibold mb-2">Address</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label>Street</Label>
+                      <Input
+                        value={addMain.street}
+                        onChange={(e) =>
+                          setAddMain({ ...addMain, street: e.target.value })
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <Label>City</Label>
+                      <Input
+                        value={addMain.city}
+                        onChange={(e) =>
+                          setAddMain({ ...addMain, city: e.target.value })
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <Label>Postal Code</Label>
+                      <Input
+                        value={addMain.postalCode}
+                        onChange={(e) =>
+                          setAddMain({ ...addMain, postalCode: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
+                </section>
 
                 {/* SPECIALIZATIONS */}
-                <div className="col-span-1 md:col-span-2">
-                  <Label>Specializations</Label>
-                  <div className="space-y-2 mt-2">
+                <section>
+                  <h3 className="font-semibold mb-2">Specializations</h3>
+                  <div className="space-y-2">
                     {addSpecializations.map((s, idx) => (
                       <div key={idx} className="flex gap-2">
                         <Input
@@ -587,195 +607,167 @@ export default function Counsellors() {
                         </Button>
                       </div>
                     ))}
-                    <div>
-                      <Button onClick={() => addSpecRow(setAddSpecializations)}>
-                        Add specialization
-                      </Button>
-                    </div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => addSpecRow(setAddSpecializations)}
+                    >
+                      + Add Specialization
+                    </Button>
                   </div>
-                </div>
+                </section>
 
                 {/* QUALIFICATIONS */}
-                <div className="col-span-1 md:col-span-2">
-                  <Label>Qualifications</Label>
-                  <div className="space-y-2 mt-2">
+                <section>
+                  <h3 className="font-semibold mb-2">Qualifications</h3>
+                  <div className="space-y-4">
                     {addQualifications.map((q, idx) => (
                       <div
                         key={idx}
-                        className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end"
+                        className="grid grid-cols-1 md:grid-cols-5 gap-2 items-end"
                       >
-                        <div>
-                          <Label>Degree</Label>
-                          <Input
-                            value={q.name}
-                            onChange={(e) =>
-                              setAddQualifications((prev) =>
-                                prev.map((v, i) =>
-                                  i === idx ? { ...v, name: e.target.value } : v
-                                )
+                        <Input
+                          placeholder="Degree"
+                          value={q.name}
+                          onChange={(e) =>
+                            setAddQualifications((prev) =>
+                              prev.map((v, i) =>
+                                i === idx ? { ...v, name: e.target.value } : v
                               )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <Label>Institution</Label>
-                          <Input
-                            value={q.institution}
-                            onChange={(e) =>
-                              setAddQualifications((prev) =>
-                                prev.map((v, i) =>
-                                  i === idx
-                                    ? { ...v, institution: e.target.value }
-                                    : v
-                                )
+                            )
+                          }
+                        />
+                        <Input
+                          placeholder="Institution"
+                          value={q.institution}
+                          onChange={(e) =>
+                            setAddQualifications((prev) =>
+                              prev.map((v, i) =>
+                                i === idx
+                                  ? { ...v, institution: e.target.value }
+                                  : v
                               )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <Label>Start</Label>
-                          <Input
-                            type="date"
-                            value={q.start}
-                            onChange={(e) =>
-                              setAddQualifications((prev) =>
-                                prev.map((v, i) =>
-                                  i === idx
-                                    ? { ...v, start: e.target.value }
-                                    : v
-                                )
+                            )
+                          }
+                        />
+                        <Input
+                          type="date"
+                          value={q.start}
+                          onChange={(e) =>
+                            setAddQualifications((prev) =>
+                              prev.map((v, i) =>
+                                i === idx ? { ...v, start: e.target.value } : v
                               )
-                            }
-                          />
-                        </div>
-                        <div className="flex gap-2">
-                          <div className="flex-1">
-                            <Label>End</Label>
-                            <Input
-                              type="date"
-                              value={q.end}
-                              onChange={(e) =>
-                                setAddQualifications((prev) =>
-                                  prev.map((v, i) =>
-                                    i === idx
-                                      ? { ...v, end: e.target.value }
-                                      : v
-                                  )
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="flex items-end">
-                            <Button
-                              variant="outline"
-                              onClick={() =>
-                                removeQualRow(idx, setAddQualifications)
-                              }
-                            >
-                              Remove
-                            </Button>
-                          </div>
-                        </div>
+                            )
+                          }
+                        />
+                        <Input
+                          type="date"
+                          value={q.end}
+                          onChange={(e) =>
+                            setAddQualifications((prev) =>
+                              prev.map((v, i) =>
+                                i === idx ? { ...v, end: e.target.value } : v
+                              )
+                            )
+                          }
+                        />
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            removeQualRow(idx, setAddQualifications)
+                          }
+                        >
+                          Remove
+                        </Button>
                       </div>
                     ))}
-                    <div>
-                      <Button onClick={() => addQualRow(setAddQualifications)}>
-                        Add qualification
-                      </Button>
-                    </div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => addQualRow(setAddQualifications)}
+                    >
+                      + Add Qualification
+                    </Button>
                   </div>
-                </div>
+                </section>
 
                 {/* SCHEDULE */}
-                <div className="col-span-1 md:col-span-2">
-                  <Label>Schedule</Label>
-                  <div className="space-y-2 mt-2">
+                <section>
+                  <h3 className="font-semibold mb-2">Schedule</h3>
+                  <div className="space-y-4">
                     {addSchedules.map((s, idx) => (
                       <div
                         key={idx}
                         className="grid grid-cols-1 md:grid-cols-5 gap-2 items-end"
                       >
-                        <div>
-                          <Label>Day</Label>
-                          <Input
-                            value={s.day}
-                            onChange={(e) =>
-                              setAddSchedules((prev) =>
-                                prev.map((v, i) =>
-                                  i === idx ? { ...v, day: e.target.value } : v
-                                )
+                        <Input
+                          placeholder="Day"
+                          value={s.day}
+                          onChange={(e) =>
+                            setAddSchedules((prev) =>
+                              prev.map((v, i) =>
+                                i === idx ? { ...v, day: e.target.value } : v
                               )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <Label>Start</Label>
-                          <Input
-                            type="time"
-                            value={s.startTime}
-                            onChange={(e) =>
-                              setAddSchedules((prev) =>
-                                prev.map((v, i) =>
-                                  i === idx
-                                    ? { ...v, startTime: e.target.value }
-                                    : v
-                                )
+                            )
+                          }
+                        />
+                        <Input
+                          type="time"
+                          value={s.startTime}
+                          onChange={(e) =>
+                            setAddSchedules((prev) =>
+                              prev.map((v, i) =>
+                                i === idx
+                                  ? { ...v, startTime: e.target.value }
+                                  : v
                               )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <Label>End</Label>
-                          <Input
-                            type="time"
-                            value={s.endTime}
-                            onChange={(e) =>
-                              setAddSchedules((prev) =>
-                                prev.map((v, i) =>
-                                  i === idx
-                                    ? { ...v, endTime: e.target.value }
-                                    : v
-                                )
+                            )
+                          }
+                        />
+                        <Input
+                          type="time"
+                          value={s.endTime}
+                          onChange={(e) =>
+                            setAddSchedules((prev) =>
+                              prev.map((v, i) =>
+                                i === idx
+                                  ? { ...v, endTime: e.target.value }
+                                  : v
                               )
-                            }
-                          />
-                        </div>
-                        <div>
-                          <Label>Mode</Label>
-                          <select
-                            value={s.mode}
-                            onChange={(e) =>
-                              setAddSchedules((prev) =>
-                                prev.map((v, i) =>
-                                  i === idx ? { ...v, mode: e.target.value } : v
-                                )
+                            )
+                          }
+                        />
+                        <select
+                          className="border rounded-md p-2"
+                          value={s.mode}
+                          onChange={(e) =>
+                            setAddSchedules((prev) =>
+                              prev.map((v, i) =>
+                                i === idx ? { ...v, mode: e.target.value } : v
                               )
-                            }
-                            className="border rounded-md p-2 w-full"
-                          >
-                            <option value="online">Online</option>
-                            <option value="offline">Offline</option>
-                          </select>
-                        </div>
-                        <div>
-                          <Button
-                            variant="outline"
-                            onClick={() =>
-                              removeScheduleRow(idx, setAddSchedules)
-                            }
-                          >
-                            Remove
-                          </Button>
-                        </div>
+                            )
+                          }
+                        >
+                          <option value="online">Online</option>
+                          <option value="offline">Offline</option>
+                        </select>
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            removeScheduleRow(idx, setAddSchedules)
+                          }
+                        >
+                          Remove
+                        </Button>
                       </div>
                     ))}
-                    <div>
-                      <Button onClick={() => addScheduleRow(setAddSchedules)}>
-                        Add schedule row
-                      </Button>
-                    </div>
+                    <Button
+                      variant="secondary"
+                      onClick={() => addScheduleRow(setAddSchedules)}
+                    >
+                      + Add Schedule
+                    </Button>
                   </div>
-                </div>
+                </section>
               </div>
 
               <DialogFooter>
@@ -783,7 +775,7 @@ export default function Counsellors() {
                   Cancel
                 </Button>
                 <Button onClick={handleAddSubmit} disabled={loading}>
-                  {loading ? "Saving..." : "Save & Add"}
+                  {loading ? "Saving..." : "Save Counsellor"}
                 </Button>
               </DialogFooter>
             </DialogContent>

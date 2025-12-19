@@ -3,11 +3,6 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  --chart-1: 220 90% 56%;
-  --border: 220 10% 60%;
-  --muted-foreground: 220 5% 70%;
-  --card: 220 8% 15%;
-  --radius: 8px;
 }
 
 .logo {
@@ -16,11 +11,9 @@
   will-change: filter;
   transition: filter 300ms;
 }
-
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
-
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -29,7 +22,6 @@
   from {
     transform: rotate(0deg);
   }
-
   to {
     transform: rotate(360deg);
   }

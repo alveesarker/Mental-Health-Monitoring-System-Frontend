@@ -15,8 +15,10 @@ import {
   BarChart3,
   Brain,
   Calendar,
+  HelpCircle,
   LayoutDashboard,
   Logs,
+  MessageSquareText,
   ScanFace,
   Settings,
   Shield,
@@ -35,6 +37,9 @@ const menuItems = [
   // { title: "AI Analysis", url: "/ai-analysis", icon: Brain },
   { title: "AI-Analysis", url: "/admin/ai-analysis", icon: Brain },
   { title: "Crisis Alerts", url: "/admin/alerts", icon: AlertTriangle },
+  { title: "Progress", url: "/admin/progress", icon: BarChart3 },
+  { title: "Feedback", url: "/admin/feedback", icon: MessageSquareText },
+  { title: "Questions", url: "/admin/questions", icon: HelpCircle },
 ];
 
 export function AppSidebar() {
