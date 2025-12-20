@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,43 +9,50 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Calendar, Clock, MapPin, MoreVertical, Video } from "lucide-react";
+import { Link } from "react-router-dom";
+import c1 from "../assets/images/c1.avif";
 
 interface SessionCardProps {
-  patient: {
-    name: string;
-    photo: string;
-    initials: string;
-  };
-  date: string;
-  time: string;
-  mode: "online" | "offline";
-  status: "scheduled" | "ongoing" | "completed";
+  counsellorName: string;
+  sessionDate: string;
+  sessionTime: string;
+  sessionType: "online" | "offline";
+  status: string;
+  link: string;
+  counsellingCenter: string;
+  roomNumber: string;
 }
 
-const statusConfig = {
-  scheduled: {
-    label: "Scheduled",
-    className: "bg-primary/10 text-primary border-primary/20",
-  },
-  ongoing: {
-    label: "Ongoing",
-    className: "bg-secondary/10 text-secondary border-secondary/20",
-  },
-  completed: {
-    label: "Completed",
-    className: "bg-accent/10 text-accent border-accent/20",
-  },
-};
-
 export const SessionCard = ({
-  patient,
-  date,
-  time,
-  mode,
+  counsellorName,
+  sessionDate,
+  sessionTime,
+  sessionType,
   status,
+  link,
+  counsellingCenter,
+  roomNumber,
 }: SessionCardProps) => {
-  const statusInfo = statusConfig[status];
 
+
+  
+  const formatDateTime = (dateTime: string) => {
+    const date = new Date(dateTime);
+    return date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  function to12Hour(time24) {
+    const [hour, minute] = time24.split(":");
+    return new Date(0, 0, 0, hour, minute).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+  }
   return (
     <Card className="overflow-hidden border border-border/40 bg-gradient-to-br from-white/90 to-background/60 shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl backdrop-blur-sm">
       <CardContent className="p-5">
@@ -54,25 +61,22 @@ export const SessionCard = ({
             <Avatar className="h-12 w-12 border-2 border-primary/20 ring-2 ring-transparent group-hover:ring-primary/10 transition-all">
               <AvatarImage
                 className="object-cover"
-                src={patient.photo}
-                alt={patient.name}
+                src={c1}
+                alt={counsellorName}
               />
-              <AvatarFallback className="bg-gradient-primary text-primary-foreground font-semibold">
-                {patient.initials}
-              </AvatarFallback>
             </Avatar>
             <div>
               <h3 className="font-semibold text-foreground text-base">
-                {patient.name}
+                {counsellorName}
               </h3>
               <div className="flex items-center gap-2 mt-1">
-                {mode === "online" ? (
+                {sessionType === "online" ? (
                   <Video className="h-3.5 w-3.5 text-primary" />
                 ) : (
                   <MapPin className="h-3.5 w-3.5 text-secondary" />
                 )}
                 <span className="text-xs text-muted-foreground capitalize">
-                  {mode}
+                  {sessionType}
                 </span>
               </div>
             </div>
@@ -85,10 +89,16 @@ export const SessionCard = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-card">
-              <DropdownMenuItem>Reschedule</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive">
-                Cancel
-              </DropdownMenuItem>
+              {sessionType == "online" ? (
+                <Link to={link}>
+                  <DropdownMenuItem>Join</DropdownMenuItem>
+                </Link>
+              ) : (
+                <DropdownMenuItem>
+                  Counselling Center:{counsellingCenter}, Room Number:
+                  {roomNumber}{" "}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -97,37 +107,18 @@ export const SessionCard = ({
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span>{date}</span>
+              <span>{formatDateTime(sessionDate)}</span>
             </div>
             <div className="flex items-center gap-1.5 text-muted-foreground">
               <Clock className="h-4 w-4" />
-              <span>{time}</span>
+              <span>{to12Hour(sessionTime)}</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-2 border-t border-border/50">
-            <Badge variant="outline" className={statusInfo.className}>
-              {statusInfo.label}
+            <Badge variant="outline" className={status}>
+              Upcomming
             </Badge>
-
-            {status === "scheduled" && (
-              <Button
-                size="sm"
-                className="bg-gradient-primary hover:opacity-90 transition-opacity"
-              >
-                Start Session
-              </Button>
-            )}
-            {status === "ongoing" && (
-              <Button size="sm" variant="secondary">
-                Join Now
-              </Button>
-            )}
-            {status === "completed" && (
-              <Button size="sm" variant="outline">
-                View Notes
-              </Button>
-            )}
           </div>
         </div>
       </CardContent>

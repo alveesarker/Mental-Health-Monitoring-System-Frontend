@@ -10,6 +10,9 @@ import Index from "@/pages/Index";
 import NotFound from "@/pages/NotFound";
 import RecommendationPage from "@/pages/recommendationPage";
 import SessionPage from "@/pages/SessionPage";
+import PatientDailyLogHistory from "@/pages/PatientDailyLogHistory";
+import SessionDetailsPage from "@/pages/SessionDetailsPage";
+import GiveFeedbackPage from "@/pages/GiveFeedback";
 
 const PatientRoutes = () => {
   return (
@@ -17,10 +20,13 @@ const PatientRoutes = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/daily-log" element={<PatientDailyLogHistory />} />
         <Route path="/recommendation" element={<RecommendationPage />} />
         <Route path="/session" element={<SessionPage />} />
+        <Route path="/sessions/:id" element={<SessionDetailsPage />} />
+        <Route path="/session/give-feedback/:id" element={<GiveFeedbackPage />} />
         <Route path="/session/book" element={<CounsellorDirectory />} />
-        <Route path="/feedback" element={<Feedback />} />
+        {/* <Route path="/feedback" element={<Feedback />} /> */}
         <Route path="/moodanalysis" element={<AiMood />} />
         <Route path="/emergency" element={<EmergencySupport />} />
         <Route path="/crisis" element={<Crisis />} />

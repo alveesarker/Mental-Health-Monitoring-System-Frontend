@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -13,7 +12,6 @@ interface RecommendationDialogProps {
   icon: LucideIcon;
   title: string;
   description: string;
-  fullDescription: string;
   colorClass: string;
 }
 
@@ -23,7 +21,6 @@ export const RecommendationDialog = ({
   icon: Icon,
   title,
   description,
-  fullDescription,
   colorClass,
 }: RecommendationDialogProps) => {
   return (
@@ -36,9 +33,6 @@ export const RecommendationDialog = ({
             <Icon className="h-8 w-8 text-primary" />
           </div>
           <DialogTitle className="text-2xl">{title}</DialogTitle>
-          <DialogDescription className="text-base pt-2">
-            {description}
-          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-4 space-y-4">
@@ -47,15 +41,7 @@ export const RecommendationDialog = ({
               About This Activity
             </h4>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {fullDescription}
-            </p>
-          </div>
-
-          <div className="rounded-lg bg-primary/5 p-4 border border-primary/10">
-            <p className="text-sm text-foreground">
-              <span className="font-semibold">Tip:</span> Regular practice of
-              this activity can significantly improve your overall well-being
-              and help manage stress levels effectively.
+              {description}
             </p>
           </div>
         </div>

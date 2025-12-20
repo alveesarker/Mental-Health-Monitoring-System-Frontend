@@ -33,10 +33,9 @@ export default function SessionDetailsPage() {
   };
 
   const progressItems = [
-    { label: "Stability", value: session.stabilityScore },
-    { label: "Stress Level", value: session.stressScore },
+    { label: "Stress Level", value: session.stressLevel },
     { label: "Depression Level", value: session.depressionLevel },
-    { label: "Work Performance", value: session.workPerformanceScore },
+    { label: "Work Performance", value: session.workPerformance },
     { label: "Energy Level", value: session.energyLevel },
     { label: "Fatigue Level", value: session.fatigueLevel },
   ];
@@ -156,10 +155,11 @@ export default function SessionDetailsPage() {
         <CardHeader>
           <CardTitle>Rating & Feedback</CardTitle>
         </CardHeader>
+
         <CardContent>
-          {session.rating ? (
+          {session.rating !== null && session.rating !== undefined ? (
             <>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
@@ -172,7 +172,7 @@ export default function SessionDetailsPage() {
                 ))}
               </div>
 
-              <div className="mt-3 text-sm">
+              <div className="mt-3 text-sm space-y-1">
                 <p>
                   <strong>Comfort Level:</strong> {session.comfortLevel}/5
                 </p>
@@ -188,7 +188,9 @@ export default function SessionDetailsPage() {
               )}
             </>
           ) : (
-            <p className="text-muted-foreground text-sm">No rating available</p>
+            <p className="text-muted-foreground text-sm">
+              No rating submitted for this session
+            </p>
           )}
         </CardContent>
       </Card>

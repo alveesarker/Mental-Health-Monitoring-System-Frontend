@@ -9,8 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -18,90 +16,86 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Calendar, MessageSquare, UserCheck } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-interface Counsellor {
-  id: number;
-  name: string;
-  specialization: string;
-  experience: string;
-  availability: string;
-  image: string;
-}
 
-const counsellors = [
-  {
-    id: 1,
-    name: "Dr. Olivia Carter",
-    specialization: "Clinical Psychologist",
-    experience: "8 years",
-    availability: "Available",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 2,
-    name: "Dr. Ethan Lee",
-    specialization: "Cognitive Behavioral Therapist",
-    experience: "5 years",
-    availability: "Busy",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 3,
-    name: "Dr. Sophia Patel",
-    specialization: "Child & Adolescent Therapist",
-    experience: "6 years",
-    availability: "Available",
-    image: "/placeholder.svg",
-  },
-  {
-    id: 4,
-    name: "Dr. Noah Smith",
-    specialization: "Marriage & Family Counselor",
-    experience: "10 years",
-    availability: "Available",
-    image: "/placeholder.svg",
-  },
-];
+interface Counsellor {
+  counsellorID: number;
+  name: string;
+  email: string;
+  contactNumber: string;
+  yearOfExperience: number;
+  availability: string;
+  specializations: string;
+  schedule: string[];
+}
 
 export const CounsellorDirectory = () => {
   const [assignedCounsellor, setAssignedCounsellor] =
     useState<Counsellor | null>(null);
+  const [counsellors, setCounsellors] = useState<Counsellor[]>([]);
   const [selectedCounsellor, setSelectedCounsellor] =
     useState<Counsellor | null>(null);
   const [showDialog, setShowDialog] = useState(false);
-  const [formData, setFormData] = useState({
-    date: "",
-    time: "",
-    mode: "",
-    notes: "",
-  });
+  const [sessionMode, setSessionMode] = useState<string>("online");
 
-  const handleAssign = (counsellor: Counsellor) => {
-    setAssignedCounsellor(counsellor);
-    toast.success(
-      `Counsellor ${counsellor.name} has been assigned successfully.`
-    );
-  };
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const patientID = user.userID;
 
-  const handleRequestSession = (counsellor: Counsellor) => {
-    setSelectedCounsellor(counsellor);
+  // Fetch assigned counsellor and all counsellors
+  useEffect(() => {
+    const fetchCounsellors = async () => {
+      try {
+        // Assigned counsellor
+        const resAssigned = await fetch(
+          `http://localhost:5000/counsellor/assigned/${patientID}`
+        );
+        const assignedData = await resAssigned.json();
+        if (assignedData.length > 0) setAssignedCounsellor(assignedData[0]);
+console.log(assignedData[0])
+        // All counsellors
+        const resAll = await fetch(`http://localhost:5000/counsellor/main`);
+        const allData = await resAll.json();
+        setCounsellors(allData);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load counsellors.");
+      }
+    };
+    fetchCounsellors();
+  }, [patientID]);
+
+  const handleRequestSession = (c: Counsellor) => {
+    setSelectedCounsellor(c);
+    setSessionMode("online");
     setShowDialog(true);
   };
 
-  const handleSubmit = () => {
-    if (!formData.date || !formData.time || !formData.mode) {
-      toast.error("Please fill all required fields.");
+  const handleSubmit = async () => {
+    if (!sessionMode || !selectedCounsellor) {
+      toast.error("Please select a session mode.");
       return;
     }
-    setShowDialog(false);
-    toast.success(
-      `Session request sent to ${selectedCounsellor.name} for ${formData.date} at ${formData.time} (${formData.mode}).`
-    );
-    setFormData({ date: "", time: "", mode: "", notes: "" });
-    setShowDialog(false);
+
+    try {
+      await fetch("http://localhost:5000/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          patientID,
+          counsellorID: selectedCounsellor.counsellorID,
+          sessionType: sessionMode,
+          status: "requested",
+        }),
+      });
+
+      toast.success(`Session requested with ${selectedCounsellor.name}.`);
+      setShowDialog(false);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to request session.");
+    }
   };
 
   return (
@@ -113,8 +107,10 @@ export const CounsellorDirectory = () => {
               <h2 className="font-semibold text-lg text-foreground">
                 Assigned Counsellor
               </h2>
+              <h2>{assignedCounsellor.name}</h2>
               <p className="text-muted-foreground text-sm">
-                {assignedCounsellor.name}
+                {assignedCounsellor.name} (
+                {assignedCounsellor.specializations.split(",").join(", ")})
               </p>
             </div>
             <Button
@@ -141,12 +137,12 @@ export const CounsellorDirectory = () => {
         <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-6">
           {counsellors.map((c) => (
             <div
-              key={c.id}
+              key={c.counsellorID}
               className="rounded-lg border border-border/50 bg-background/50 shadow-sm hover:shadow-md transition-all p-4 flex items-start gap-4"
             >
               <Avatar className="h-14 w-14">
-                <AvatarImage src={c.image} alt={c.name} />
-                <AvatarFallback>{c.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src="/placeholder.svg" alt={c.name} />
+                <AvatarFallback>{c.name}</AvatarFallback>
               </Avatar>
 
               <div className="flex-1">
@@ -154,10 +150,10 @@ export const CounsellorDirectory = () => {
                   {c.name}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {c.specialization}
+                  {c.specializations?.split(",") || [].join(", ")}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Experience: {c.experience}
+                  Experience: {c.yearOfExperience} years
                 </p>
                 <div className="mt-2">
                   <Badge
@@ -171,42 +167,13 @@ export const CounsellorDirectory = () => {
                     {c.availability}
                   </Badge>
                 </div>
-
-                <div className="mt-4 flex gap-2">
-                  {assignedCounsellor?.id === c.id ? (
-                    <Button
-                      size="sm"
-                      variant="default"
-                      onClick={() => handleRequestSession(c)}
-                      className="gap-1.5"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                      Request Session
-                    </Button>
-                  ) : (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      disabled={
-                        c.availability !== "Available" || assignedCounsellor
-                          ? true
-                          : false
-                      }
-                      onClick={() => handleAssign(c)}
-                      className="gap-1.5"
-                    >
-                      <UserCheck className="h-4 w-4" />
-                      Request
-                    </Button>
-                  )}
-                </div>
               </div>
             </div>
           ))}
         </CardContent>
       </Card>
 
-      {/* --- Session Request Dialog --- */}
+      {/* Session Request Dialog */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -216,57 +183,20 @@ export const CounsellorDirectory = () => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label>Date</Label>
-                <Input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) =>
-                    setFormData({ ...formData, date: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <Label>Time</Label>
-                <Input
-                  type="time"
-                  value={formData.time}
-                  onChange={(e) =>
-                    setFormData({ ...formData, time: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
+          <div className="space-y-4 mt-2">
             <div>
-              <Label>Session Mode</Label>
               <Select
-                value={formData.mode}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, mode: value })
-                }
+                value={sessionMode}
+                onValueChange={(value) => setSessionMode(value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select mode" />
+                  <SelectValue placeholder="Select session mode" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="online">Online</SelectItem>
                   <SelectItem value="offline">Offline</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-
-            <div>
-              <Label>Additional Notes (optional)</Label>
-              <Textarea
-                placeholder="Write a short message for your counsellor..."
-                value={formData.notes}
-                onChange={(e) =>
-                  setFormData({ ...formData, notes: e.target.value })
-                }
-              />
             </div>
           </div>
 

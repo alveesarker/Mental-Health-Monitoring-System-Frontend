@@ -9,87 +9,55 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Eye, FileText, MoreVertical, Pen } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
-import { FileText, MoreVertical, Star, Trash2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
-const statusConfig: Record<
-  SessionStatus,
-  {
-    label: string;
-    variant: "default" | "secondary" | "destructive" | "outline";
-  }
-> = {
-  upcoming: { label: "Upcoming", variant: "default" },
-  ongoing: { label: "Ongoing", variant: "secondary" },
-  completed: { label: "Completed", variant: "outline" },
-  cancelled: { label: "Cancelled", variant: "destructive" },
-};
 
-export type SessionStatus = "upcoming" | "ongoing" | "completed" | "cancelled";
 
-export interface CounsellorSession {
-  id: string;
-  userName: string;
-  counsellor: string;
-  specialization: string;
-  dateTime: string;
-  status: SessionStatus;
-  feedback?: string;
-  rating?: number;
-  progress: number;
+
+interface ApiSession {
+  sessionID: number;
+  counsellorName: string;
+  sessionDate: string;
+  sessionTime: string;
+  status: string;
 }
 
-const sessions: CounsellorSession[] = [
-  {
-    id: "SES-001",
-    userName: "Sarah Johnson",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Anxiety & Depression",
-    dateTime: "2025-11-03T14:00:00",
-    status: "upcoming",
-    progress: 75,
-  },
-  {
-    id: "SES-002",
-    userName: "Michael Chen",
-    counsellor: "Dr. Emily Carter",
-    specialization: "Stress Management",
-    dateTime: "2025-11-01T10:30:00",
-    status: "completed",
-    feedback: "Very helpful session, great insights",
-    rating: 5,
-    progress: 100,
-  },
-  {
-    id: "SES-003",
-    userName: "Jessica Martinez",
-    counsellor: "Dr. David Thompson",
-    specialization: "Relationship Counseling",
-    dateTime: "2025-11-01T15:00:00",
-    status: "ongoing",
-    progress: 45,
-  },
-  {
-    id: "SES-004",
-    userName: "Alex Kumar",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Career Guidance",
-    dateTime: "2025-10-28T11:00:00",
-    status: "cancelled",
-    progress: 0,
-  },
-];
-
 export const SessionHistory = () => {
-  const formatDateTime = (dateTime: string) => {
-    const date = new Date(dateTime);
-    return date.toLocaleString("en-US", {
+  const [sessions, setSessions] = useState<ApiSession[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const patientID = 8; // 🔴 replace with auth/context later
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/sessions/${patientID}`);
+        const json = await res.json();
+
+        if (json.success) {
+          setSessions(json.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch sessions", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSessions();
+  }, []);
+
+  const formatDateTime = (date: string, time: string) => {
+    const dt = new Date(`${date}T${time}`);
+    return dt.toLocaleString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
@@ -100,21 +68,19 @@ export const SessionHistory = () => {
   };
 
   return (
-    <Card className="border-[1px] shadow-md rounded-xl hover:shadow-lg transition-shadow duration-300 bg-card/80 backdrop-blur-sm">
-      {" "}
-      <CardHeader className="border-b border-border/40 bg-gradient-to-r from-primary/5 to-secondary/10 rounded-t-xl">
-        {" "}
-        <CardTitle className="flex items-center gap-2 text-foreground font-semibold">
-          {" "}
+    <Card className="border shadow-md rounded-xl bg-card/80">
+      <CardHeader className="border-b bg-gradient-to-r from-primary/5 to-secondary/10">
+        <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-primary" />
-          Session History & Feedback{" "}
-        </CardTitle>{" "}
+          Session History
+        </CardTitle>
       </CardHeader>
+
       <CardContent className="p-6">
-        <div className="rounded-lg border border-border/50 overflow-hidden bg-background/50">
+        <div className="rounded-lg border overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow className="bg-muted/50">
+              <TableRow>
                 <TableHead>Session ID</TableHead>
                 <TableHead>Counsellor</TableHead>
                 <TableHead>Date & Time</TableHead>
@@ -124,33 +90,29 @@ export const SessionHistory = () => {
             </TableHeader>
 
             <TableBody>
-              {sessions.length === 0 ? (
+              {loading ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={9}
-                    className="text-center py-8 text-muted-foreground"
-                  >
-                    No sessions found matching your filters
+                  <TableCell colSpan={5} className="text-center py-6">
+                    Loading sessions...
+                  </TableCell>
+                </TableRow>
+              ) : sessions.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-6">
+                    No sessions found
                   </TableCell>
                 </TableRow>
               ) : (
-                sessions.map((session) => (
-                  <TableRow
-                    key={session.id}
-                    className="hover:bg-muted/30 transition-colors"
-                  >
-                    <TableCell>{session.id}</TableCell>
-                    <TableCell>{session.counsellor}</TableCell>
-                    <TableCell>{formatDateTime(session.dateTime)}</TableCell>
+                sessions.map((s) => (
+                  <TableRow key={s.sessionID}>
+                    <TableCell>{s.sessionID}</TableCell>
+                    <TableCell>{s.counsellorName}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={statusConfig[session.status].variant}
-                        className="font-medium"
-                      >
-                        {statusConfig[session.status].label}
-                      </Badge>
+                      {formatDateTime(s.sessionDate, s.sessionTime)}
                     </TableCell>
-
+                    <TableCell>
+                      <Badge>{s.status}</Badge>
+                    </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -158,11 +120,28 @@ export const SessionHistory = () => {
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-40">
-                          <DropdownMenuItem className="text-destructive">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Cancel
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link
+                              to={`/sessions/${s.sessionID}`}
+                              className="flex w-full items-center"
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </Link>
                           </DropdownMenuItem>
+
+                          {s.status === "Completed" && (
+                            <DropdownMenuItem asChild>
+                              <Link
+                                to={`/session/give-feedback/${s.sessionID}`}
+                                className="flex w-full items-center"
+                              >
+                                <Pen className="h-4 w-4 mr-2" />
+                                Give Feedback
+                              </Link>
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

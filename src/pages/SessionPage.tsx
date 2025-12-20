@@ -10,7 +10,7 @@ const SessionPage = () => {
 
       <main className="container px-4 md:px-6 py-8 space-y-8">
         {/* Dashboard Metrics */}
-        <DashboardMetrics />
+        {/* <DashboardMetrics /> */}
 
         {/* Upcoming Sessions */}
         <UpcomingSessions />

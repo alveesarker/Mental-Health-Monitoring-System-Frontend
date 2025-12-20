@@ -22,6 +22,7 @@ import {
   Calendar,
   CheckCircle,
   Compass,
+  Database,
   Info,
   LogOut,
   MessageSquare,
@@ -183,6 +184,16 @@ export const Header = () => {
               </Link>
 
               <Link
+                to="/daily-log"
+                className={`${baseLink} ${
+                  isActive("/daily-log") ? active : muted
+                }`}
+              >
+                <Calendar className="h-4 w-4" />
+                Daily Logs
+              </Link>
+
+              <Link
                 to="/moodanalysis"
                 className={`${baseLink} ${
                   isActive("/moodanalysis") ? active : muted
@@ -215,16 +226,6 @@ export const Header = () => {
               </Link>
 
               <Link
-                to="/feedback"
-                className={`${baseLink} ${
-                  isActive("/feedback") ? active : muted
-                }`}
-              >
-                <MessageSquare className="h-4 w-4" />
-                Counsellro Feedback
-              </Link>
-
-              <Link
                 to="/emergency"
                 className={`${baseLink} ${
                   isActive("/emergency") ? active : muted
@@ -239,7 +240,7 @@ export const Header = () => {
           <div className="flex items-center gap-4">
             <div className="hidden sm:block text-sm text-muted-foreground">
               Welcome back,{" "}
-              <span className="font-medium text-foreground">Alvee</span>
+              <span className="font-medium text-foreground">{user.name}</span>
             </div>
 
             <Sheet>

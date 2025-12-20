@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/card";
+import { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -8,19 +10,61 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { toast } from "sonner";
 
-const data = [
-  { day: "25/7", mood: 2, stress: 3 },
-  { day: "26/7", mood: 2, stress: 9 },
-  { day: "27/7", mood: 3, stress: 5 },
-  { day: "27/7", mood: 4, stress: 3 },
-  { day: "29/7", mood: 7, stress: 2 },
-  { day: "30/7", mood: 4, stress: 1 },
-  { day: "1/8", mood: 6, stress: 3 },
-  { day: "2/8", mood: 9, stress: 6 },
-];
+const API_URL = "http://localhost:5000/daily-logs/";
 
 export const ProgressCard = () => {
+  const [data, setData] = useState<
+    { day: string; mood: number; stress: number }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const moodMap: Record<string, number> = {
+    Great: 9,
+    Good: 7,
+    Okay: 5,
+    Low: 3,
+    Difficult: 1,
+  };
+
+  const fetchDailyLogs = async () => {
+    if (!user?.userID) return;
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_URL}${user.userID}/last7`);
+      const result = await res.json();
+
+      if (result.success) {
+        // Convert mood to number and stress to number
+        const mappedLogs = result.logs.map((log: any) => ({
+          day: log.day,
+          mood: moodMap[log.mood] ?? 0,
+          stress: Number(log.stress) || 0,
+        }));
+
+        // Optional: sort oldest → newest
+        mappedLogs.reverse();
+
+        setData(mappedLogs);
+      } else {
+        toast.error("Failed to load daily logs");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to load daily logs");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDailyLogs();
+  }, []);
+
   return (
     <Card className="p-5 w-[470px] h-[410px] flex flex-col justify-between shadow-md border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 hover:shadow-lg">
       {/* Header */}

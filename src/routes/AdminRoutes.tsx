@@ -34,7 +34,7 @@ const AdminRoutes = () => {
               <Route path="/counsellors" element={<Counsellors />} />
               <Route path="/alerts" element={<Alerts />} />
               <Route path="/sessions" element={<SessionManagement />} />
-              <Route path="/sessions/:id" element={<SessionDetailsPage />} />
+              
               <Route path="/ai-analysis" element={<AIAnalysisSearch />} />
               <Route path="/daily-logs" element={<ADailyLog />} />
               <Route path="/recommendation" element={<ARecommendation />} />
