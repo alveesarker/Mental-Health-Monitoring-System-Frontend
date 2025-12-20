@@ -29,7 +29,7 @@ export interface QuestionRecord {
   id: string;
   questionID: string;
   questionText: string;
-  type: "Scale" | "Text" | "Yes/No";
+  type: "SCALE RATING" | "MULTIPLE CHOICE" | "TEXT RESPONSE" | "BOOLEAN" | "DATE TIME" | "FREQUENCY COUNT" | "CHECKLIST" | "CONDITIONAL";
   rules: QuestionRule[];
 }
 
@@ -46,7 +46,14 @@ export const sessionIDs = [
 ];
 
 export const stabilityOptions = ["Stable", "Moderate", "Critical"] as const;
-export const questionTypes = ["Scale", "Text", "Yes/No"] as const;
+export const questionTypes = ["SCALE RATING",
+  "MULTIPLE CHOICE",
+  "TEXT RESPONSE",
+  "BOOLEAN",
+  "DATE TIME",
+  "FREQUENCY COUNT",
+  "CHECKLIST",
+  "CONDITIONAL"] as const;
 export const ruleCategories = [
   "sleepDuration",
   "stressLevel",
@@ -147,43 +154,5 @@ export const mockFeedbackData: FeedbackRecord[] = [
     comfortLevel: 10,
     clarityLevel: 9,
     comment: "Best session yet, breakthrough moment",
-  },
-];
-
-export const mockQuestionsData: QuestionRecord[] = [
-  {
-    id: "1",
-    questionID: "Q-001",
-    questionText: "How would you rate your overall mood today?",
-    type: "Scale",
-    rules: [
-      { id: "r1", category: "moodScore", value: "1-10" },
-    ],
-  },
-  {
-    id: "2",
-    questionID: "Q-002",
-    questionText: "Describe any challenges you faced this week",
-    type: "Text",
-    rules: [],
-  },
-  {
-    id: "3",
-    questionID: "Q-003",
-    questionText: "Did you experience any panic attacks?",
-    type: "Yes/No",
-    rules: [
-      { id: "r2", category: "anxietyLevel", value: "high" },
-    ],
-  },
-  {
-    id: "4",
-    questionID: "Q-004",
-    questionText: "How many hours did you sleep last night?",
-    type: "Scale",
-    rules: [
-      { id: "r3", category: "sleepDuration", value: "0-12" },
-      { id: "r4", category: "fatigueLevel", value: "calculated" },
-    ],
   },
 ];

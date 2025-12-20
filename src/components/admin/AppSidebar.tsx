@@ -19,6 +19,7 @@ import {
   LayoutDashboard,
   Logs,
   MessageSquareText,
+  Phone,
   ScanFace,
   Settings,
   Shield,
@@ -40,6 +41,8 @@ const menuItems = [
   { title: "Progress", url: "/admin/progress", icon: BarChart3 },
   { title: "Feedback", url: "/admin/feedback", icon: MessageSquareText },
   { title: "Questions", url: "/admin/questions", icon: HelpCircle },
+  { title: "Emergency Contact", url: "/admin/emergency-contact", icon: Phone },
+  { title: "Assign Counsellor", url: "/admin/assignment", icon: Phone },
 ];
 
 export function AppSidebar() {

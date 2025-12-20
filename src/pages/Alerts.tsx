@@ -12,10 +12,11 @@ import { DataTable } from "../components/DataTable";
 
 const API_URL = "http://localhost:5000/crisisalerts";
 
-// Empty form template
+const ALERT_TYPES = ["Suicidal", "Self-harm", "Aggression", "Depression"];
+const STATUS_TYPES = ["Pending", "Resolved", "In Progress"];
+
 const EMPTY_FORM = {
   alertType: "",
-  alertLevel: "",
   alertMessage: "",
   timestamp: "",
   status: "",
@@ -43,8 +44,8 @@ export default function Alerts() {
       const items = await res.json();
       setData(items);
 
-      const pending = items.filter((i) => i.status === "Open").length;
-      const resolved = items.filter((i) => i.status === "Closed").length;
+      const pending = items.filter((i) => i.status === "Pending").length;
+      const resolved = items.filter((i) => i.status === "Resolved").length;
 
       setStats({ total: items.length, pending, resolved });
     } catch (e) {
@@ -123,7 +124,9 @@ export default function Alerts() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{stats.total}</div>
-            <p className="text-xs text-muted-foreground mt-1">All recorded alerts</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              All recorded alerts
+            </p>
           </CardContent>
         </Card>
 
@@ -134,8 +137,12 @@ export default function Alerts() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-yellow-500">{stats.pending}</div>
-            <p className="text-xs text-muted-foreground mt-1">Awaiting review</p>
+            <div className="text-3xl font-bold text-yellow-500">
+              {stats.pending}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Awaiting review
+            </p>
           </CardContent>
         </Card>
 
@@ -146,8 +153,12 @@ export default function Alerts() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">{stats.resolved}</div>
-            <p className="text-xs text-muted-foreground mt-1">Handled successfully</p>
+            <div className="text-3xl font-bold text-green-600">
+              {stats.resolved}
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Handled successfully
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -158,7 +169,6 @@ export default function Alerts() {
         columns={[
           { key: "alertID", label: "Alert ID" },
           { key: "alertType", label: "Type" },
-          { key: "alertLevel", label: "Level" },
           { key: "alertMessage", label: "Message" },
           { key: "timestamp", label: "Timestamp" },
           { key: "status", label: "Status" },
@@ -191,33 +201,106 @@ export default function Alerts() {
           </DialogHeader>
 
           <div className="space-y-3">
-            {Object.keys(form)
-              .filter((key) => key !== "alertID")
-              .map((key) => (
-                <div key={key} className="space-y-1">
-                  <label className="text-sm font-medium capitalize">{key}</label>
+            {/* Alert Type */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Alert Type</label>
+              <select
+                className="border p-2 w-full rounded"
+                value={form.alertType}
+                onChange={(e) =>
+                  setForm({ ...form, alertType: e.target.value })
+                }
+              >
+                <option value="">Select type</option>
+                {ALERT_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-                  {key === "timestamp" ? (
-                    <input
-                      type="datetime-local"
-                      className="border p-2 w-full rounded"
-                      value={form.timestamp ? form.timestamp.slice(0, 16) : ""}
-                      onChange={(e) =>
-                        setForm({ ...form, timestamp: e.target.value })
-                      }
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      className="border p-2 w-full rounded"
-                      value={form[key]}
-                      onChange={(e) =>
-                        setForm({ ...form, [key]: e.target.value })
-                      }
-                    />
-                  )}
-                </div>
-              ))}
+            {/* Status */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Status</label>
+              <select
+                className="border p-2 w-full rounded"
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                <option value="">Select status</option>
+                {STATUS_TYPES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Alert Message */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Message</label>
+              <textarea
+                className="border p-2 w-full rounded resize-none"
+                rows={3}
+                value={form.alertMessage}
+                onChange={(e) =>
+                  setForm({ ...form, alertMessage: e.target.value })
+                }
+              />
+            </div>
+
+            {/* Timestamp */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Timestamp</label>
+              <input
+                type="datetime-local"
+                className="border p-2 w-full rounded"
+                value={form.timestamp ? form.timestamp.slice(0, 16) : ""}
+                onChange={(e) =>
+                  setForm({ ...form, timestamp: e.target.value })
+                }
+              />
+            </div>
+
+            {/* Counsellor ID */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Counsellor ID</label>
+              <input
+                type="number"
+                className="border p-2 w-full rounded"
+                value={form.counsellorID}
+                onChange={(e) =>
+                  setForm({ ...form, counsellorID: e.target.value })
+                }
+              />
+            </div>
+
+            {/* Patient ID */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Patient ID</label>
+              <input
+                type="number"
+                className="border p-2 w-full rounded"
+                value={form.patientID}
+                onChange={(e) =>
+                  setForm({ ...form, patientID: e.target.value })
+                }
+              />
+            </div>
+
+            {/* Analysis ID */}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Analysis ID</label>
+              <input
+                type="number"
+                className="border p-2 w-full rounded"
+                value={form.analysisID}
+                onChange={(e) =>
+                  setForm({ ...form, analysisID: e.target.value })
+                }
+              />
+            </div>
           </div>
 
           <DialogFooter>
@@ -233,37 +316,102 @@ export default function Alerts() {
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Alert</DialogTitle>
+            <DialogTitle>Edit Crisis Alert</DialogTitle>
           </DialogHeader>
 
           <div className="space-y-3">
+            {/* Reuse same form structure */}
             {Object.keys(form)
               .filter((key) => key !== "alertID")
-              .map((key) => (
-                <div key={key} className="space-y-1">
-                  <label className="text-sm font-medium capitalize">{key}</label>
-
-                  {key === "timestamp" ? (
-                    <input
-                      type="datetime-local"
-                      className="border p-2 w-full rounded"
-                      value={form.timestamp ? form.timestamp.slice(0, 16) : ""}
-                      onChange={(e) =>
-                        setForm({ ...form, timestamp: e.target.value })
-                      }
-                    />
-                  ) : (
-                    <input
-                      type="text"
-                      className="border p-2 w-full rounded"
-                      value={form[key]}
-                      onChange={(e) =>
-                        setForm({ ...form, [key]: e.target.value })
-                      }
-                    />
-                  )}
-                </div>
-              ))}
+              .map((key) => {
+                if (key === "alertType") {
+                  return (
+                    <div key={key} className="space-y-1">
+                      <label className="text-sm font-medium">Alert Type</label>
+                      <select
+                        className="border p-2 w-full rounded"
+                        value={form.alertType}
+                        onChange={(e) =>
+                          setForm({ ...form, alertType: e.target.value })
+                        }
+                      >
+                        <option value="">Select type</option>
+                        {ALERT_TYPES.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                } else if (key === "status") {
+                  return (
+                    <div key={key} className="space-y-1">
+                      <label className="text-sm font-medium">Status</label>
+                      <select
+                        className="border p-2 w-full rounded"
+                        value={form.status}
+                        onChange={(e) =>
+                          setForm({ ...form, status: e.target.value })
+                        }
+                      >
+                        <option value="">Select status</option>
+                        {STATUS_TYPES.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                } else if (key === "alertMessage") {
+                  return (
+                    <div key={key} className="space-y-1">
+                      <label className="text-sm font-medium">Message</label>
+                      <textarea
+                        className="border p-2 w-full rounded resize-none"
+                        rows={3}
+                        value={form.alertMessage}
+                        onChange={(e) =>
+                          setForm({ ...form, alertMessage: e.target.value })
+                        }
+                      />
+                    </div>
+                  );
+                } else if (key === "timestamp") {
+                  return (
+                    <div key={key} className="space-y-1">
+                      <label className="text-sm font-medium">Timestamp</label>
+                      <input
+                        type="datetime-local"
+                        className="border p-2 w-full rounded"
+                        value={
+                          form.timestamp ? form.timestamp.slice(0, 16) : ""
+                        }
+                        onChange={(e) =>
+                          setForm({ ...form, timestamp: e.target.value })
+                        }
+                      />
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div key={key} className="space-y-1">
+                      <label className="text-sm font-medium capitalize">
+                        {key}
+                      </label>
+                      <input
+                        type="number"
+                        className="border p-2 w-full rounded"
+                        value={form[key]}
+                        onChange={(e) =>
+                          setForm({ ...form, [key]: e.target.value })
+                        }
+                      />
+                    </div>
+                  );
+                }
+              })}
           </div>
 
           <DialogFooter>

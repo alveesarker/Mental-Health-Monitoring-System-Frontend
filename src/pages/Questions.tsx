@@ -1,29 +1,50 @@
-import { useState, useMemo } from "react";
-import { Plus, Pencil, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { SearchInput } from "@/components/ui/search-input";
-import { DataTable } from "@/components/ui/data-table";
-import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { QuestionFormDialog } from "@/components/dialogs/QuestionFormDialog";
-import { QuestionRecord, mockQuestionsData } from "@/lib/mock-data";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { DataTable } from "@/components/ui/data-table";
+import { SearchInput } from "@/components/ui/search-input";
 import { toast } from "@/hooks/use-toast";
+import { QuestionRecord } from "@/lib/mock-data";
+import { Pencil, Plus, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function QuestionsPage() {
-  const [data, setData] = useState<QuestionRecord[]>(mockQuestionsData);
+  const [data, setData] = useState<QuestionRecord[]>([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingRecord, setEditingRecord] = useState<QuestionRecord | null>(null);
+  const [editingRecord, setEditingRecord] = useState<QuestionRecord | null>(
+    null
+  );
   const [deleteRecord, setDeleteRecord] = useState<QuestionRecord | null>(null);
 
   const pageSize = 5;
+
+  // Fetch questions from backend
+  const fetchQuestions = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/questions"); // adjust route if needed
+      const questions = await res.json();
+      setData(questions);
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: "Failed to fetch questions",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
 
   const filteredData = useMemo(() => {
     const searchLower = search.toLowerCase();
     return data.filter(
       (item) =>
-        item.questionID.toLowerCase().includes(searchLower) ||
+        String(item.questionID).toLowerCase().includes(searchLower) ||
         item.questionText.toLowerCase().includes(searchLower)
     );
   }, [data, search]);
@@ -47,40 +68,79 @@ export default function QuestionsPage() {
     setDeleteRecord(record);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (deleteRecord) {
-      setData(data.filter((item) => item.id !== deleteRecord.id));
-      toast({
-        title: "Question deleted",
-        description: `Question ${deleteRecord.questionID} has been deleted.`,
-      });
-      setDeleteRecord(null);
+      try {
+        await fetch(
+          `http://localhost:5000/questions/${deleteRecord.questionID}`,
+          {
+            method: "DELETE",
+          }
+        );
+        toast({
+          title: "Deleted",
+          description: `Question ${deleteRecord.questionID} deleted`,
+        });
+        setDeleteRecord(null);
+        fetchQuestions();
+      } catch (err) {
+        console.error(err);
+        toast({
+          title: "Error",
+          description: "Failed to delete question",
+        });
+      }
     }
   };
 
-  const handleSave = (record: QuestionRecord) => {
-    if (editingRecord) {
-      setData(data.map((item) => (item.id === record.id ? record : item)));
+  const handleSave = async (record: QuestionRecord) => {
+    try {
+      if (editingRecord) {
+        // Update existing question
+        await fetch(`http://localhost:5000/questions/${record.questionID}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(record),
+        });
+        toast({
+          title: "Updated",
+          description: `Question ${record.questionID} updated`,
+        });
+      } else {
+        // Create new question (backend generates ID)
+        const { questionID, ...newRecord } = record;
+        await fetch("http://localhost:5000/questions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newRecord),
+        });
+        toast({
+          title: "Created",
+          description: "Question created successfully",
+        });
+      }
+      setIsFormOpen(false);
+      setEditingRecord(null);
+      fetchQuestions();
+    } catch (err) {
+      console.error(err);
       toast({
-        title: "Question updated",
-        description: `Question ${record.questionID} has been updated.`,
-      });
-    } else {
-      setData([...data, { ...record, id: String(Date.now()) }]);
-      toast({
-        title: "Question created",
-        description: `Question ${record.questionID} has been created.`,
+        title: "Error",
+        description: "Failed to save question",
       });
     }
-    setIsFormOpen(false);
-    setEditingRecord(null);
   };
 
   const getTypeBadge = (type: string) => {
     const variants: Record<string, string> = {
-      Scale: "bg-accent/10 text-accent border-accent/20",
-      Text: "bg-primary/10 text-primary border-primary/20",
-      "Yes/No": "bg-success/10 text-success border-success/20",
+      "SCALE RATING": "bg-accent/10 text-accent border-accent/20",
+      "MULTIPLE CHOICE": "bg-primary/10 text-primary border-primary/20",
+      "TEXT RESPONSE": "bg-secondary/10 text-secondary border-secondary/20",
+      BOOLEAN: "bg-success/10 text-success border-success/20",
+      "DATE TIME": "bg-warning/10 text-warning border-warning/20",
+      "FREQUENCY COUNT": "bg-info/10 text-info border-info/20",
+      CHECKLIST: "bg-muted/10 text-muted border-muted/20",
+      CONDITIONAL: "bg-destructive/10 text-destructive border-destructive/20",
     };
     return (
       <Badge variant="outline" className={variants[type]}>
@@ -132,11 +192,14 @@ export default function QuestionsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Assessment Questions</h1>
-          <p className="text-muted-foreground mt-1">Manage mental health assessment questions and rules</p>
+          <h1 className="text-2xl font-semibold text-foreground">
+            Assessment Questions
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Manage mental health assessment questions and rules
+          </p>
         </div>
         <Button onClick={handleAdd} className="gap-2">
           <Plus className="h-4 w-4" />
@@ -144,7 +207,6 @@ export default function QuestionsPage() {
         </Button>
       </div>
 
-      {/* Search */}
       <SearchInput
         placeholder="Search by Question ID or text..."
         value={search}
@@ -155,7 +217,6 @@ export default function QuestionsPage() {
         className="max-w-sm"
       />
 
-      {/* Table */}
       <DataTable
         columns={columns}
         data={paginatedData}
@@ -166,7 +227,6 @@ export default function QuestionsPage() {
         emptyMessage="No questions found"
       />
 
-      {/* Form Dialog */}
       <QuestionFormDialog
         open={isFormOpen}
         onOpenChange={setIsFormOpen}
@@ -174,7 +234,6 @@ export default function QuestionsPage() {
         onSave={handleSave}
       />
 
-      {/* Delete Confirmation */}
       <ConfirmDialog
         open={!!deleteRecord}
         onOpenChange={(open) => !open && setDeleteRecord(null)}

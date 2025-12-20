@@ -30,10 +30,21 @@ import { Button } from "@/components/ui/button";
 import { QuestionRecord, QuestionRule, questionTypes, ruleCategories } from "@/lib/mock-data";
 
 const formSchema = z.object({
-  questionID: z.string().min(1, "Question ID is required").max(20, "Question ID must be less than 20 characters"),
-  questionText: z.string().min(1, "Question text is required").max(500, "Question text must be less than 500 characters"),
-  type: z.enum(["Scale", "Text", "Yes/No"]),
+  questionText: z.string()
+    .min(1, "Question text is required")
+    .max(500, "Question text must be less than 500 characters"),
+  type: z.enum([
+    "SCALE RATING",
+    "MULTIPLE CHOICE",
+    "TEXT RESPONSE",
+    "BOOLEAN",
+    "DATE TIME",
+    "FREQUENCY COUNT",
+    "CHECKLIST",
+    "CONDITIONAL"
+  ]),
 });
+
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -56,25 +67,22 @@ export function QuestionFormDialog({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      questionID: "",
       questionText: "",
-      type: "Scale",
+      type: "SCALE RATING",
     },
   });
 
   useEffect(() => {
     if (record) {
       form.reset({
-        questionID: record.questionID,
         questionText: record.questionText,
         type: record.type,
       });
       setRules(record.rules || []);
     } else {
       form.reset({
-        questionID: "",
         questionText: "",
-        type: "Scale",
+        type: "SCALE RATING",
       });
       setRules([]);
     }
@@ -83,7 +91,7 @@ export function QuestionFormDialog({
   const onSubmit = (values: FormValues) => {
     onSave({
       id: record?.id || "",
-      questionID: values.questionID,
+      questionID: record?.questionID || "", // only for editing
       questionText: values.questionText,
       type: values.type,
       rules,
@@ -120,19 +128,15 @@ export function QuestionFormDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="questionID"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Question ID</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., Q-001" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Show questionID only when editing */}
+            {isEditing && (
+              <FormItem>
+                <FormLabel>Question ID</FormLabel>
+                <FormControl>
+                  <Input value={record?.questionID} disabled />
+                </FormControl>
+              </FormItem>
+            )}
 
             <FormField
               control={form.control}

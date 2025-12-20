@@ -182,8 +182,8 @@ export const SessionsTable = () => {
                     className="hover:bg-muted/30 transition-colors"
                   >
                     <TableCell>{session.sessionID}</TableCell>
-                    <TableCell>{session.pname}</TableCell>
-                    <TableCell>{session.cname}</TableCell>
+                    <TableCell>{session.patientID}</TableCell>
+                    <TableCell>{session.counsellorID}</TableCell>
                     <TableCell>{formatDateTime(session.sessionDate)}</TableCell>
                     <TableCell>{to12Hour(session.sessionTime)}</TableCell>
                     <TableCell>{session.duration}</TableCell>

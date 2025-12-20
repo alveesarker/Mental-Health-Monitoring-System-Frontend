@@ -70,6 +70,7 @@ export default function Users() {
     city: "",
     street: "",
     postalCode: "",
+    password: "",
   });
 
   // --- Edit Patient Dialog State ---
@@ -83,6 +84,7 @@ export default function Users() {
     city: "",
     street: "",
     postalCode: "",
+    password: "",
   });
 
   // --- Delete Confirmation Dialog State ---
@@ -117,6 +119,7 @@ export default function Users() {
           city: "",
           street: "",
           postalCode: "",
+          password: "",
         });
       })
       .catch((err) => console.error("Add Patient Error:", err));
@@ -134,6 +137,7 @@ export default function Users() {
       city: patient.city || "",
       street: patient.street || "",
       postalCode: patient.postalCode || "",
+      password: patient.password || "", // always empty
     });
   };
 
@@ -141,9 +145,13 @@ export default function Users() {
   const handleSavePatient = () => {
     if (!editingPatient) return;
 
-    const payload = Object.fromEntries(
-      Object.entries(editUser).filter(([_, v]) => v !== "")
-    );
+    const payload = { ...editUser };
+
+    // Remove password if user didn't enter one
+    if (!payload.password) {
+      delete payload.password;
+    }
+    console.log(payload);
 
     fetch(`http://localhost:5000/patients/${editingPatient.patientID}`, {
       method: "PUT",
@@ -152,13 +160,11 @@ export default function Users() {
     })
       .then((res) => res.json())
       .then((updatedPatient) => {
-        const patientWithID = {
-          patientID: editingPatient.patientID,
-          ...updatedPatient,
-        };
         setUsers((prev) =>
           prev.map((p) =>
-            p.patientID === patientWithID.patientID ? patientWithID : p
+            p.patientID === editingPatient.patientID
+              ? { ...p, ...updatedPatient }
+              : p
           )
         );
         setEditingPatient(null);
@@ -277,6 +283,13 @@ export default function Users() {
                 value={newUser.postalCode}
                 onChange={(e) =>
                   setNewUser({ ...newUser, postalCode: e.target.value })
+                }
+              />
+              <Input
+                placeholder="Password"
+                value={newUser.password}
+                onChange={(e) =>
+                  setNewUser({ ...newUser, password: e.target.value })
                 }
               />
             </div>
@@ -450,6 +463,13 @@ export default function Users() {
               value={editUser.postalCode}
               onChange={(e) =>
                 setEditUser({ ...editUser, postalCode: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Password"
+              value={editUser.password}
+              onChange={(e) =>
+                setEditUser({ ...editUser, password: e.target.value })
               }
             />
           </div>

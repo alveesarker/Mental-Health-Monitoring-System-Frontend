@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +12,9 @@ import { toast } from "sonner";
 import { DataTable } from "../components/DataTable";
 
 const API_URL = "http://localhost:5000/analysis";
+
+// Allowed emotions (must match your ENUM in DB)
+const emotions = ["Happy", "Sad", "Neutral", "Angry", "Anxious"];
 
 // Column definitions
 const columns = [
@@ -29,7 +31,6 @@ export default function AIAnalysisSearch() {
   // Dialog states
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteItem, setDeleteItem] = useState<any>(null);
 
@@ -40,7 +41,6 @@ export default function AIAnalysisSearch() {
     issue: "",
     emotionalClassification: "",
   });
-
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
   // Fetch all analysis
@@ -51,14 +51,14 @@ export default function AIAnalysisSearch() {
       setData(logs);
     } catch (err) {
       toast.error("Failed to load analysis");
-    } 
+    }
   };
 
   useEffect(() => {
     fetchAnalysis();
   }, []);
 
-  // Add button
+  // Add
   const handleAdd = () => {
     setForm({
       riskScore: "",
@@ -69,7 +69,6 @@ export default function AIAnalysisSearch() {
     setIsAddOpen(true);
   };
 
-  // Submit add
   const handleAddSubmit = async () => {
     try {
       const res = await fetch(API_URL, {
@@ -84,12 +83,12 @@ export default function AIAnalysisSearch() {
       setIsAddOpen(false);
       fetchAnalysis();
     } catch (e) {
-      console.error("Fetch error:", e);
+      console.error(e);
       toast.error("Failed to add record");
     }
   };
 
-  // Edit item
+  // Edit
   const handleEdit = (item: any) => {
     setSelectedItem(item);
     setForm({
@@ -102,12 +101,9 @@ export default function AIAnalysisSearch() {
     setIsEditOpen(true);
   };
 
-  // Submit edit
   const handleEditSubmit = async () => {
     try {
-      const url = `${API_URL}/${selectedItem.analysisID}`;
-
-      const res = await fetch(url, {
+      const res = await fetch(`${API_URL}/${selectedItem.analysisID}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -181,8 +177,11 @@ export default function AIAnalysisSearch() {
             />
 
             <input
+              type="number"
+              min={-100}
+              max={100}
               className="border p-2 w-full rounded"
-              placeholder="Sentiment Score"
+              placeholder="Sentiment Score (-100 to 100)"
               value={form.sentimentScore}
               onChange={(e) =>
                 setForm({ ...form, sentimentScore: e.target.value })
@@ -196,17 +195,20 @@ export default function AIAnalysisSearch() {
               onChange={(e) => setForm({ ...form, issue: e.target.value })}
             />
 
-            <input
+            <select
               className="border p-2 w-full rounded"
-              placeholder="Emotional Classification"
               value={form.emotionalClassification}
               onChange={(e) =>
-                setForm({
-                  ...form,
-                  emotionalClassification: e.target.value,
-                })
+                setForm({ ...form, emotionalClassification: e.target.value })
               }
-            />
+            >
+              <option value="">Select Emotion</option>
+              {emotions.map((e) => (
+                <option key={e} value={e}>
+                  {e}
+                </option>
+              ))}
+            </select>
           </div>
 
           <DialogFooter>
@@ -241,8 +243,11 @@ export default function AIAnalysisSearch() {
             />
 
             <input
+              type="number"
+              min={-100}
+              max={100}
               className="border p-2 w-full rounded"
-              placeholder="Sentiment Score"
+              placeholder="Sentiment Score (-100 to 100)"
               value={form.sentimentScore}
               onChange={(e) =>
                 setForm({ ...form, sentimentScore: e.target.value })
@@ -256,17 +261,20 @@ export default function AIAnalysisSearch() {
               onChange={(e) => setForm({ ...form, issue: e.target.value })}
             />
 
-            <input
+            <select
               className="border p-2 w-full rounded"
-              placeholder="Emotional Classification"
               value={form.emotionalClassification}
               onChange={(e) =>
-                setForm({
-                  ...form,
-                  emotionalClassification: e.target.value,
-                })
+                setForm({ ...form, emotionalClassification: e.target.value })
               }
-            />
+            >
+              <option value="">Select Emotion</option>
+              {emotions.map((e) => (
+                <option key={e} value={e}>
+                  {e}
+                </option>
+              ))}
+            </select>
           </div>
 
           <DialogFooter>

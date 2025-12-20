@@ -39,6 +39,7 @@ const emptyMain = {
   street: "",
   city: "",
   postalCode: "",
+  password:"",
 };
 
 const emptyQualification = () => ({
@@ -165,6 +166,7 @@ export default function Counsellors() {
         city: r.city || "",
         street: r.street || "",
         postalCode: r.postalCode?.toString() || "",
+        password:r.password || "",
       }));
       setCounsellors(normalized);
     } catch (err) {
@@ -210,6 +212,7 @@ export default function Counsellors() {
         street: addMain.street,
         city: addMain.city,
         postalCode: addMain.postalCode,
+        password: addMain.password,
       },
       specializations: addSpecializations.filter((s) => s && s.trim()),
       qualifications: addQualifications
@@ -280,6 +283,7 @@ export default function Counsellors() {
         street: mainRow.street || "",
         city: mainRow.city || "",
         postalCode: mainRow.postalCode || "",
+        password:mainRow.password || "",
       });
 
       setEditSpecializations(
@@ -327,6 +331,7 @@ export default function Counsellors() {
         street: editMain.street,
         city: editMain.city,
         postalCode: editMain.postalCode,
+        password:editMain.password,
       },
       specializations: editSpecializations.filter((s) => s && s.trim()),
       qualifications: editQualifications
@@ -379,6 +384,7 @@ export default function Counsellors() {
           street: row.street,
           city: row.city,
           postalCode: row.postalCode,
+          password:row.password,
         },
         specializations: (details.specializations || []).map(
           (s) => s.specialization || s
@@ -496,6 +502,16 @@ export default function Counsellors() {
                         value={addMain.email}
                         onChange={(e) =>
                           setAddMain({ ...addMain, email: e.target.value })
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <Label>Password</Label>
+                      <Input
+                        value={addMain.password}
+                        onChange={(e) =>
+                          setAddMain({ ...addMain, password: e.target.value })
                         }
                       />
                     </div>
@@ -845,7 +861,6 @@ export default function Counsellors() {
       </Card>
 
       {/* Edit Dialog (separate) */}
-      {/* Edit Dialog (separate) */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-w-6xl h-[82vh] overflow-y-auto rounded-2xl p-8 shadow-2xl border border-gray-200 bg-white">
           <DialogHeader className="pb-4 border-b">
@@ -879,6 +894,17 @@ export default function Counsellors() {
                   value={editMain.email}
                   onChange={(e) =>
                     setEditMain({ ...editMain, email: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <Label className="font-semibold">Password</Label>
+                <Input
+                  className="rounded-xl border-gray-300 focus:ring-2 focus:ring-blue-400"
+                  value={editMain.password}
+                  onChange={(e) =>
+                    setEditMain({ ...editMain, password: e.target.value })
                   }
                 />
               </div>

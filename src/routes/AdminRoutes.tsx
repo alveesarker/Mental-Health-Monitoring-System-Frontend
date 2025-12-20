@@ -17,6 +17,8 @@ import Users from "@/pages/Users";
 import AdminProgressPage from "@/pages/AdminProgress";
 import AdminFeedbackPage from "@/pages/AdminFeedback";
 import QuestionsPage from "@/pages/Questions";
+import EmergencyContacts from "@/pages/EmergencyContacts";
+import { AssignmentPage } from "@/pages/AssignmentPage";
 
 const AdminRoutes = () => {
   return (
@@ -39,6 +41,8 @@ const AdminRoutes = () => {
               <Route path="/progress" element={<AdminProgressPage />} />
               <Route path="/feedback" element={<AdminFeedbackPage />} />
               <Route path="/questions" element={<QuestionsPage />} />
+              <Route path="/emergency-contact" element={<EmergencyContacts />} />
+              <Route path="/assignment" element={<AssignmentPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

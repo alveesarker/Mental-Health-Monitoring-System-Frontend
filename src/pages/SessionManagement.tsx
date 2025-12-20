@@ -1,24 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SessionsFilterBar } from "@/components/sessions/SessionsFilterBar";
 import { SessionsHeader } from "@/components/sessions/SessionsHeader";
-import { Session, SessionsTable } from "@/components/sessions/SessionsTable";
+import { SessionsTable, Session } from "@/components/sessions/SessionsTable";
+import { AddSessionDialog } from "@/components/sessions/AddSessionDialog";
 import { useEffect, useState } from "react";
 
 const SessionManagement = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [session, setSession] = useState<Session | null>(null);
-  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
   const [filteredSessions, setFilteredSessions] = useState<Session[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
-  // Fetch sessions from API
-  // in SessionManagement.tsx (or .jsx)
+  // =========================
+  // FETCH SESSIONS
+  // =========================
   const fetchSessions = async () => {
     try {
       const res = await fetch("http://localhost:5000/sessions");
       const data = await res.json();
-      
 
-      const mappedData: Session[] = data.map((s) => ({
+      const mappedData: Session[] = data.map((s: any) => ({
         sessionID: s.sessionID,
         sessionDate: s.sessionDate,
         status: s.status,
@@ -27,14 +27,13 @@ const SessionManagement = () => {
         counsellorID: s.counsellorID,
         sessionType: s.sessionType,
         sessionTime: s.sessionTime,
-        cname: s.cname,
         pname: s.pname,
+        cname: s.cname,
         link: s.link || null,
         counsellingCenter: s.counsellingCenter || null,
         roomNumber: s.roomNumber || null,
       }));
 
-      console.log(mappedData)
       setSessions(mappedData);
       setFilteredSessions(mappedData);
     } catch (err) {
@@ -46,11 +45,9 @@ const SessionManagement = () => {
     fetchSessions();
   }, []);
 
-  const showDetailDialog = (session: Session) => {
-    setIsDetailDialogOpen(true);
-    setSession(session);
-  };
-
+  // =========================
+  // FILTER HANDLER
+  // =========================
   const handleFilter = (filters: {
     search: string;
     counsellor: string;
@@ -63,18 +60,21 @@ const SessionManagement = () => {
     if (filters.search) {
       filtered = filtered.filter(
         (s) =>
-          s.cname?.toLowerCase().includes(filters.search.toLowerCase()) ||
-          s.pname?.toLowerCase().includes(filters.search.toLowerCase())
+          s.pname?.toLowerCase().includes(filters.search.toLowerCase()) ||
+          s.cname?.toLowerCase().includes(filters.search.toLowerCase())
       );
     }
+
     if (filters.status) {
       filtered = filtered.filter((s) => s.status === filters.status);
     }
+
     if (filters.dateRange.from) {
       filtered = filtered.filter(
         (s) => new Date(s.sessionDate) >= filters.dateRange.from!
       );
     }
+
     if (filters.dateRange.to) {
       filtered = filtered.filter(
         (s) => new Date(s.sessionDate) <= filters.dateRange.to!
@@ -84,6 +84,9 @@ const SessionManagement = () => {
     setFilteredSessions(filtered);
   };
 
+  // =========================
+  // REFRESH
+  // =========================
   const handleRefresh = () => {
     fetchSessions();
   };
@@ -91,25 +94,25 @@ const SessionManagement = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto p-6 space-y-6">
+        {/* HEADER */}
         <SessionsHeader
           onRefresh={handleRefresh}
-          onAddSession={() => setIsDialogOpen(true)}
+          onAddSession={() => setIsAddDialogOpen(true)}
         />
+
+        {/* FILTER BAR */}
         <SessionsFilterBar onFilter={handleFilter} sessions={sessions} />
+
+        {/* TABLE */}
         <SessionsTable />
       </div>
 
-      {/* <AddSessionDialog
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onAdd={handleAddSession}
-      /> */}
-
-      {/* <SessionDetailsDialog
-        open={isDetailDialogOpen}
-        onClose={() => setIsDetailDialogOpen(false)}
-        session={session}
-      /> */}
+      {/* ADD SESSION DIALOG */}
+      <AddSessionDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        onAdded={fetchSessions}
+      />
     </div>
   );
 };
