@@ -226,6 +226,18 @@ export const Header = () => {
               </Link>
 
               <Link
+                to="/progress"
+                className={`${baseLink} ${
+                  isActive("/progress") || isActive("/progress")
+                    ? active
+                    : muted
+                }`}
+              >
+                <Calendar className="h-4 w-4" />
+                Progress
+              </Link>
+
+              <Link
                 to="/emergency"
                 className={`${baseLink} ${
                   isActive("/emergency") ? active : muted

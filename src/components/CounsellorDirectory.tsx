@@ -79,14 +79,14 @@ console.log(assignedData[0])
     }
 
     try {
-      await fetch("http://localhost:5000/sessions", {
+      await fetch("http://localhost:5000/sessions/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           patientID,
           counsellorID: selectedCounsellor.counsellorID,
           sessionType: sessionMode,
-          status: "requested",
+          status: "Requested",
         }),
       });
 

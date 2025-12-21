@@ -1,144 +1,23 @@
-// SessionManagement.tsx
-import { CounsellorAddSessionDialog } from "@/components/counsellor/CounsellorAddSessionDialog";
-import { CounsellorSessionFilter } from "@/components/counsellor/CounsellorSessionFilter";
-import { CounsellorSessionsHeader } from "@/components/counsellor/CounsellorSessionsHeader";
-import { CounsellorSessionsTable } from "@/components/counsellor/CounsellorSessionsTable";
-import { useState } from "react";
-
-// ... your Session and mockSessions as before
-
-export type SessionStatus = "upcoming" | "ongoing" | "completed" | "cancelled";
-
-export interface CounsellorSession {
-  id: string;
-  userName: string;
-  counsellor: string;
-  specialization: string;
-  dateTime: string;
-  status: SessionStatus;
-  feedback?: string;
-  rating?: number;
-  progress: number;
-}
-
-const mockSessions: CounsellorSession[] = [
-  {
-    id: "SES-001",
-    userName: "Sarah Johnson",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Anxiety & Depression",
-    dateTime: "2025-11-03T14:00:00",
-    status: "upcoming",
-    progress: 75,
-  },
-  {
-    id: "SES-002",
-    userName: "Michael Chen",
-    counsellor: "Dr. Emily Carter",
-    specialization: "Stress Management",
-    dateTime: "2025-11-01T10:30:00",
-    status: "completed",
-    feedback: "Very helpful session, great insights",
-    rating: 5,
-    progress: 100,
-  },
-  {
-    id: "SES-003",
-    userName: "Jessica Martinez",
-    counsellor: "Dr. David Thompson",
-    specialization: "Relationship Counseling",
-    dateTime: "2025-11-01T15:00:00",
-    status: "ongoing",
-    progress: 45,
-  },
-  {
-    id: "SES-004",
-    userName: "Alex Kumar",
-    counsellor: "Dr. Robert Wilson",
-    specialization: "Career Guidance",
-    dateTime: "2025-10-28T11:00:00",
-    status: "cancelled",
-    progress: 0,
-  },
-];
+import { DashboardMetrics } from "@/components/DashboardMetrics";
+import { SessionHeader } from "@/components/SessionHeader";
+import { CUpcomingSessions } from "./CUpcomingSessions";
+import { CSessionHistory } from "./CSessionHistory";
 
 const CounsellorSession = () => {
-  const [sessions, setSessions] = useState<CounsellorSession[]>(mockSessions);
-  const [counsellorSession, setCounsellorSession] = useState<CounsellorSession>(null);
-  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
-  const [filteredSessions, setFilteredSessions] =
-    useState<CounsellorSession[]>(mockSessions);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  const handleAddSession = (newSession: {
-    userName: string;
-    counsellor: string;
-    specialization: string;
-    dateTime: string;
-  }) => {
-    const maxId = Math.max(
-      0,
-      ...sessions.map((s) => parseInt(s.id.split("-")[1]))
-    );
-    const newId = `SES-${(maxId + 1).toString().padStart(3, "0")}`;
-
-    const counsellorSession: CounsellorSession = {
-      id: newId,
-      progress: 0,
-      status: "upcoming",
-      ...newSession,
-    };
-
-    const updated = [...sessions, counsellorSession];
-    setSessions(updated);
-    setFilteredSessions(updated);
-  };
-
-  const showDetailDialog = (session: CounsellorSession) => {
-    setIsDetailDialogOpen(true);
-    setCounsellorSession(session);
-  };
-
-  const handleFilter = (filters: {
-    search: string;
-    counsellor: string;
-    user: string;
-    status: string;
-    dateRange: { from?: Date; to?: Date };
-  }) => {
-    // same filtering logic
-  };
-
-  const handleRefresh = () => {
-    setFilteredSessions(sessions);
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-6 space-y-6">
-        <CounsellorSessionsHeader
-          onRefresh={handleRefresh}
-          onAddSession={() => setIsDialogOpen(true)} // 👈 open dialog
-        />
-        <CounsellorSessionFilter onFilter={handleFilter} sessions={sessions} />
-        <CounsellorSessionsTable
-          sessions={filteredSessions}
-          onViewDetails={showDetailDialog}
-        />
-      </div>
+    <div className="min-h-screen bg-gradient-subtle">
+      {/* <SessionHeader /> */}
 
-      {/* Dialog */}
-      <CounsellorAddSessionDialog
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
-        onAdd={handleAddSession}
-      />
+      <main className="container px-4 md:px-6 py-8 space-y-8">
+        {/* Dashboard Metrics */}
+        {/* <DashboardMetrics /> */}
 
-      {/* <SessionDetailsDialog
-        open={isDetailDialogOpen}
-        onClose={() => setIsDetailDialogOpen(false)}
-        session={session}
-      /> */}
+        {/* Upcoming Sessions */}
+        <CUpcomingSessions />
+
+        {/* Session History */}
+        <CSessionHistory />
+      </main>
     </div>
   );
 };

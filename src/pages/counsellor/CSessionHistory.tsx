@@ -17,7 +17,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 
 
@@ -30,7 +30,7 @@ interface ApiSession {
   status: string;
 }
 
-export const SessionHistory = () => {
+export const CSessionHistory = () => {
   const [sessions, setSessions] = useState<ApiSession[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +39,7 @@ export const SessionHistory = () => {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/sessions/${user.userID}`);
+        const res = await fetch(`http://localhost:5000/sessions/c/${user.userID}`);
         const json = await res.json();
 
         if (json.success) {
@@ -134,11 +134,11 @@ export const SessionHistory = () => {
                           {s.status === "Completed" && (
                             <DropdownMenuItem asChild>
                               <Link
-                                to={`/session/give-feedback/${s.sessionID}`}
+                                to={`/counsellor/session/give-progress/${s.sessionID}`}
                                 className="flex w-full items-center"
                               >
                                 <Pen className="h-4 w-4 mr-2" />
-                                Give Feedback
+                                Patient Progress
                               </Link>
                             </DropdownMenuItem>
                           )}

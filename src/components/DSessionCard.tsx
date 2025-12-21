@@ -16,7 +16,7 @@ interface SessionCardProps {
   counsellorName: string;
   sessionDate: string;
   sessionTime: string;
-  sessionType: "online" | "offline";
+  sessionType: "Online" | "Offline";
   status: string;
   link: string;
   counsellingCenter: string;
@@ -70,7 +70,7 @@ export const SessionCard = ({
                 {counsellorName}
               </h3>
               <div className="flex items-center gap-2 mt-1">
-                {sessionType === "online" ? (
+                {sessionType === "Online" ? (
                   <Video className="h-3.5 w-3.5 text-primary" />
                 ) : (
                   <MapPin className="h-3.5 w-3.5 text-secondary" />
@@ -89,7 +89,7 @@ export const SessionCard = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-card">
-              {sessionType == "online" ? (
+              {sessionType == "Online" ? (
                 <Link to={link}>
                   <DropdownMenuItem>Join</DropdownMenuItem>
                 </Link>

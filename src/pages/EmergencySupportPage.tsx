@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Brain, Heart, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const EmergencySupport = () => {
@@ -16,33 +15,6 @@ const EmergencySupport = () => {
             If you're feeling overwhelmed or need support, help is just one tap
             away.
           </p>
-        </div>
-
-        <div
-          className="grid md:grid-cols-3 gap-4 mt-12 animate-fade-in"
-          style={{ animationDelay: "0.2s" }}
-        >
-          <div className="p-6 bg-card/80 backdrop-blur-sm rounded-lg border border-border/50">
-            <Brain className="w-8 h-8 text-primary mb-3 mx-auto" />
-            <h3 className="font-semibold mb-2">AI Detection</h3>
-            <p className="text-sm text-muted-foreground">
-              Gentle monitoring of your emotional patterns
-            </p>
-          </div>
-          <div className="p-6 bg-card/80 backdrop-blur-sm rounded-lg border border-border/50">
-            <Shield className="w-8 h-8 text-primary mb-3 mx-auto" />
-            <h3 className="font-semibold mb-2">Safe Support</h3>
-            <p className="text-sm text-muted-foreground">
-              Immediate access to crisis resources
-            </p>
-          </div>
-          <div className="p-6 bg-card/80 backdrop-blur-sm rounded-lg border border-border/50">
-            <Heart className="w-8 h-8 text-primary mb-3 mx-auto" />
-            <h3 className="font-semibold mb-2">Compassionate Care</h3>
-            <p className="text-sm text-muted-foreground">
-              Connect with your counsellor anytime
-            </p>
-          </div>
         </div>
 
         <div

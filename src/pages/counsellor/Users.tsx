@@ -1,6 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -9,61 +13,57 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TrendingUp, TrendingDown, UserMinus } from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface Patient {
+  patientID: number;
+  Name: string;
+  Email: string;
+  Gender: string;
+  DateOfBirth: string;
+  City: string;
+  mood?: string;
+  trend?: "up" | "down";
+  riskLevel?: string;
+}
 
 const CounsellorUsers = () => {
-  const users = [
-    {
-      id: "U001",
-      name: "Sarah Johnson",
-      email: "sarah.j@email.com",
-      gender: "Female",
-      joinDate: "2024-01-15",
-      mood: "Good",
-      trend: "up",
-      riskLevel: "Low",
-    },
-    {
-      id: "U002",
-      name: "Michael Chen",
-      email: "m.chen@email.com",
-      gender: "Male",
-      joinDate: "2024-02-03",
-      mood: "Difficult",
-      trend: "down",
-      riskLevel: "High",
-    },
-    {
-      id: "U003",
-      name: "Emma Davis",
-      email: "emma.d@email.com",
-      gender: "Female",
-      joinDate: "2024-01-20",
-      mood: "Great",
-      trend: "up",
-      riskLevel: "Low",
-    },
-    {
-      id: "U004",
-      name: "James Wilson",
-      email: "j.wilson@email.com",
-      gender: "Male",
-      joinDate: "2024-02-10",
-      mood: "Okay",
-      trend: "down",
-      riskLevel: "Medium",
-    },
-    {
-      id: "U005",
-      name: "Olivia Martinez",
-      email: "o.martinez@email.com",
-      gender: "Female",
-      joinDate: "2024-01-28",
-      mood: "Low",
-      trend: "down",
-      riskLevel: "Medium",
-    },
-  ];
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const counsellorID = user.userID;
+
+    if (!counsellorID) return;
+
+    const fetchPatients = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5000/patients/assigned-patient/${counsellorID}`
+        );
+        const data = await res.json();
+
+        if (data.success) {
+          // Add optional fields for table (mood, trend, riskLevel) if needed
+          const formattedPatients = data.data.map((p: Patient) => ({
+            ...p,
+            mood: "Good", // you can modify this with real data if available
+            trend: "up",
+            riskLevel: "Low",
+          }));
+
+          setPatients(formattedPatients);
+        }
+      } catch (err) {
+        console.error("Failed to fetch patients:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, []);
 
   const getMoodBadgeVariant = (mood: string) => {
     switch (mood.toLowerCase()) {
@@ -95,65 +95,55 @@ const CounsellorUsers = () => {
     }
   };
 
+  if (loading) return <p>Loading assigned patients...</p>;
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-3xl font-bold text-foreground">Assigned Users</h2>
-        <p className="text-muted-foreground mt-1">Manage and monitor all users assigned to you</p>
+        <p className="text-muted-foreground mt-1">
+          Manage and monitor all users assigned to you
+        </p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>User Overview</CardTitle>
-          <CardDescription>Complete list of your assigned patients with current status</CardDescription>
+          <CardDescription>
+            Complete list of your assigned patients with current status
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border border-border overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/50">
-                  <TableHead className="font-semibold">User ID</TableHead>
+                  <TableHead className="font-semibold">Patient ID</TableHead>
                   <TableHead className="font-semibold">Name</TableHead>
                   <TableHead className="font-semibold">Email</TableHead>
                   <TableHead className="font-semibold">Gender</TableHead>
-                  <TableHead className="font-semibold">Join Date</TableHead>
-                  <TableHead className="font-semibold">Mood</TableHead>
-                  <TableHead className="font-semibold">Trend</TableHead>
-                  <TableHead className="font-semibold">Risk Level</TableHead>
-                  <TableHead className="font-semibold text-right">Actions</TableHead>
+                  <TableHead className="font-semibold">Date of Birth</TableHead>
+                  <TableHead className="font-semibold">City</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id} className="hover:bg-muted/30 transition-colors">
-                    <TableCell className="font-medium">{user.id}</TableCell>
-                    <TableCell className="font-medium">{user.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{user.email}</TableCell>
-                    <TableCell>{user.gender}</TableCell>
-                    <TableCell className="text-muted-foreground">{user.joinDate}</TableCell>
-                    <TableCell>
-                      <Badge variant={getMoodBadgeVariant(user.mood)}>
-                        {user.mood}
-                      </Badge>
+                {patients.map((user) => (
+                  <TableRow
+                    key={user.patientID}
+                    className="hover:bg-muted/30 transition-colors"
+                  >
+                    <TableCell className="font-medium">
+                      {user.patientID}
                     </TableCell>
-                    <TableCell>
-                      {user.trend === "up" ? (
-                        <TrendingUp className="h-4 w-4 text-success" />
-                      ) : (
-                        <TrendingDown className="h-4 w-4 text-destructive" />
-                      )}
+                    <TableCell className="font-medium">{user.Name}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {user.Email}
                     </TableCell>
-                    <TableCell>
-                      <Badge className={getRiskBadgeColor(user.riskLevel)}>
-                        {user.riskLevel}
-                      </Badge>
+                    <TableCell>{user.Gender}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {user.DateOfBirth}
                     </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive hover:bg-destructive/10">
-                        <UserMinus className="h-4 w-4 mr-1" />
-                        Release
-                      </Button>
-                    </TableCell>
+                    <TableCell>{user.City}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

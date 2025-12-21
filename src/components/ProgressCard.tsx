@@ -162,14 +162,7 @@ export const ProgressCard = () => {
       </div>
 
       {/* AI Insight */}
-      <div className="mt-3">
-        <Card className="p-3 bg-muted/40 border-primary/20 shadow-inner rounded-lg">
-          <p className="text-sm text-foreground leading-snug">
-            <span className="font-medium">AI Insight:</span> Your stress levels
-            peaked mid-week. Try brief breathing exercises during work breaks.
-          </p>
-        </Card>
-      </div>
+      
     </Card>
   );
 };

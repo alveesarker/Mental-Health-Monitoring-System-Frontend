@@ -13,6 +13,7 @@ import SessionPage from "@/pages/SessionPage";
 import PatientDailyLogHistory from "@/pages/PatientDailyLogHistory";
 import SessionDetailsPage from "@/pages/SessionDetailsPage";
 import GiveFeedbackPage from "@/pages/GiveFeedback";
+import ProgressPage from "@/components/ProgressPage";
 
 const PatientRoutes = () => {
   return (
@@ -28,6 +29,7 @@ const PatientRoutes = () => {
         <Route path="/session/book" element={<CounsellorDirectory />} />
         {/* <Route path="/feedback" element={<Feedback />} /> */}
         <Route path="/moodanalysis" element={<AiMood />} />
+        <Route path="/progress" element={<ProgressPage />} />
         <Route path="/emergency" element={<EmergencySupport />} />
         <Route path="/crisis" element={<Crisis />} />
         <Route path="*" element={<NotFound />} />
