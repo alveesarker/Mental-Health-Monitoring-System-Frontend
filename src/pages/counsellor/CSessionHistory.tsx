@@ -123,7 +123,7 @@ export const CSessionHistory = () => {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem asChild>
                             <Link
-                              to={`/sessions/${s.sessionID}`}
+                              to={`/counsellor/session/${s.sessionID}`}
                               className="flex w-full items-center"
                             >
                               <Eye className="h-4 w-4 mr-2" />

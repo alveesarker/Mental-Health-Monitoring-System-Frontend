@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router-dom";
 
 import AIAnalysis from "@/pages/counsellor/AIAnalysis";
 import CounsellorSession from "@/pages/counsellor/CounsellorSession";
-import CounsellorSessionDetails from "@/pages/counsellor/CounsellorSessionDetails";
 import DailyLogs from "@/pages/counsellor/DailyLogs";
 import DailyLogsUsers from "@/pages/counsellor/DailyLogsUsers";
 import Dashboard from "@/pages/counsellor/Dashboard";
@@ -11,20 +10,15 @@ import GiveProgress from "@/pages/counsellor/GiveProgress";
 import Recommendations from "@/pages/counsellor/Recommendations";
 import Users from "@/pages/counsellor/Users";
 import NotFound from "@/pages/NotFound";
+import SessionDetailsPage from "@/pages/SessionDetailsPage";
+import CounsellorPatientDailyLog from "@/pages/counsellor/CounsellorPatientDailyLog";
 
 const CounsellorRoutes = () => {
   return (
     <Routes>
+      
       <Route
-        path=""
-        element={
-          <DashboardLayout>
-            <Dashboard />
-          </DashboardLayout>
-        }
-      />
-      <Route
-        path="/users"
+        path="/"
         element={
           <DashboardLayout>
             <Users />
@@ -39,14 +33,14 @@ const CounsellorRoutes = () => {
           </DashboardLayout>
         }
       />
-      {/* <Route
-        path="/sessions/:id"
+      <Route
+        path="/session/:id"
         element={
           <DashboardLayout>
-            <CounsellorSessionDetails />
+            <SessionDetailsPage />
           </DashboardLayout>
         }
-      /> */}
+      />
       <Route
         path="/session/give-progress/:id"
         element={
@@ -60,7 +54,7 @@ const CounsellorRoutes = () => {
         path="/daily-logs"
         element={
           <DashboardLayout>
-            <DailyLogsUsers />
+            <CounsellorPatientDailyLog />
           </DashboardLayout>
         }
       />

@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const menuItems = [
-  { title: "Dashboard", url: "/counsellor", icon: Home },
-  { title: "Assigned Users", url: "/counsellor/users", icon: Users },
+  { title: "Assigned Users", url: "/counsellor", icon: Users },
   { title: "Session", url: "/counsellor/session", icon: Calendar},
   { title: "Daily Logs", url: "/counsellor/daily-logs", icon: FileText },
   { title: "AI Analysis", url: "/counsellor/ai-analysis", icon: BrainCircuit },

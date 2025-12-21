@@ -91,17 +91,6 @@ export const CUpcomingSessions = () => {
           </div>
         )}
       </CardContent>
-
-      <Link to={"/session/book"}>
-        <Button
-          size="sm"
-          variant="default"
-          className="w-[96.5%] h-10 relative gap-1.5 mb-5 left-[50%] translate-x-[-50%]"
-        >
-          <MessageSquare className="h-4 w-4" />
-          Book Another Session
-        </Button>
-      </Link>
     </Card>
   );
 };
